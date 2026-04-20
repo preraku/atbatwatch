@@ -1,0 +1,7 @@
+poll_interval_seconds = 10
+
+[[players]]
+name = "Shohei Ohtani"
+
+[[players]]
+name = "Ronald Acuña Jr."

@@ -1,0 +1,59 @@
+{
+  "copyright": "Copyright 2026 MLB Advanced Media, L.P.  Use of any content on this page acknowledges agreement to the terms posted here http://gdx.mlb.com/components/copyright.txt",
+  "people": [
+    {
+      "id": 677593,
+      "fullName": "Luis Garc\u00eda",
+      "link": "/api/v1/people/677593",
+      "firstName": "Luis",
+      "lastName": "Garcia",
+      "primaryNumber": "67",
+      "birthDate": "2000-10-01",
+      "currentAge": 25,
+      "birthCity": "San Pedro de Macoris",
+      "birthCountry": "Dominican Republic",
+      "height": "5' 11\"",
+      "weight": 195,
+      "active": true,
+      "currentTeam": {
+        "id": 669,
+        "name": "Estrellas Orientales",
+        "link": "/api/v1/teams/669",
+        "parentOrgId": 11
+      },
+      "primaryPosition": {
+        "code": "6",
+        "name": "Shortstop",
+        "type": "Infielder",
+        "abbreviation": "SS"
+      },
+      "useName": "Luis",
+      "useLastName": "Garcia",
+      "middleName": "Jose",
+      "boxscoreName": "Garc\u00eda, L",
+      "gender": "M",
+      "nameMatrilineal": "Alcantara",
+      "isPlayer": true,
+      "isVerified": true,
+      "pronunciation": "loo-EES garr-SEE-ah",
+      "batSide": {
+        "code": "S",
+        "description": "Switch"
+      },
+      "pitchHand": {
+        "code": "R",
+        "description": "Right"
+      },
+      "nameFirstLast": "Luis Garc\u00eda",
+      "nameSlug": "luis-garcia-677593",
+      "firstLastName": "Luis Garc\u00eda",
+      "lastFirstName": "Garc\u00eda, Luis",
+      "lastInitName": "Garcia, L",
+      "initLastName": "L Garc\u00eda",
+      "fullFMLName": "Luis Jose Garc\u00eda",
+      "fullLFMName": "Garc\u00eda, Luis Jose",
+      "strikeZoneTop": 3.165,
+      "strikeZoneBottom": 1.598
+    }
+  ]
+}

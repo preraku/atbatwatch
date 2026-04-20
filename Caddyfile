@@ -1,0 +1,10 @@
+# Reverse-proxy stub — replace :80 with your domain once you have one,
+# and uncomment the reverse_proxy line when FastAPI is added.
+#
+# {$DOMAIN} {
+#     reverse_proxy app:8000
+# }
+
+:80 {
+    respond "atbatwatch is running" 200
+}

@@ -1,0 +1,25 @@
+poll_interval_seconds = 10
+
+[[players]]
+name = "Shohei Ohtani"
+
+[[players]]
+name = "Ronald Acuña Jr."
+
+[[players]]
+name = "Reese McGuire"
+
+[[players]]
+name = "Wilyer Abreu"
+
+[[players]]
+name = "Masataka Yoshida"
+
+[[players]]
+name = "Riley Greene"
+
+[[players]]
+name = "Dillon Dingler"
+
+[[players]]
+name = "Matt Vierling"

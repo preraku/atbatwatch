@@ -1,0 +1,54 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Deploy to Hetzner CX22
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
+          DOMAIN: ${{ secrets.DOMAIN }}
+        run: |
+          echo "$DEPLOY_KEY" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+
+          # Build .env on the Actions runner from GitHub Secrets
+          {
+            echo "POSTGRES_USER=${POSTGRES_USER}"
+            echo "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+            echo "POSTGRES_DB=${POSTGRES_DB}"
+            echo "DATABASE_URL=${DATABASE_URL}"
+            echo "REDIS_URL=${REDIS_URL}"
+            [[ -n "$DOMAIN" ]] && echo "DOMAIN=${DOMAIN}" || true
+          } > /tmp/app.env
+
+          scp -i /tmp/deploy_key \
+              -o StrictHostKeyChecking=no \
+              /tmp/app.env deploy@"$DEPLOY_HOST":/opt/atbatwatch/.env
+
+          ssh -i /tmp/deploy_key \
+              -o StrictHostKeyChecking=no \
+              -o BatchMode=yes \
+              deploy@"$DEPLOY_HOST" << 'REMOTE'
+            set -euo pipefail
+            cd /opt/atbatwatch
+            git pull --ff-only origin main
+            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
+            docker image prune -f
+            echo "Deploy complete: $(git rev-parse --short HEAD)"
+          REMOTE
+
+          rm -f /tmp/deploy_key /tmp/app.env

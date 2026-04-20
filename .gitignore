@@ -1,0 +1,6 @@
+docs/
+*/__pycache__
+.env
+*.pyc
+.venv/
+memray*

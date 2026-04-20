@@ -1,0 +1,58 @@
+{
+  "copyright": "Copyright 2026 MLB Advanced Media, L.P.  Use of any content on this page acknowledges agreement to the terms posted here http://gdx.mlb.com/components/copyright.txt",
+  "people": [
+    {
+      "id": 677651,
+      "fullName": "Luis Garcia",
+      "link": "/api/v1/people/677651",
+      "firstName": "Luis",
+      "lastName": "Garcia",
+      "birthDate": "1996-12-13",
+      "currentAge": 29,
+      "birthCity": "Bolivar",
+      "birthCountry": "Venezuela",
+      "height": "6' 1\"",
+      "weight": 248,
+      "active": true,
+      "currentTeam": {
+        "id": 531,
+        "name": "Scranton/Wilkes-Barre RailRiders",
+        "link": "/api/v1/teams/531",
+        "parentOrgId": 147
+      },
+      "primaryPosition": {
+        "code": "1",
+        "name": "Pitcher",
+        "type": "Pitcher",
+        "abbreviation": "P"
+      },
+      "useName": "Luis",
+      "useLastName": "Garcia",
+      "middleName": "Heibardo",
+      "boxscoreName": "Garcia, L",
+      "gender": "M",
+      "nameMatrilineal": "Maestre",
+      "isPlayer": true,
+      "isVerified": true,
+      "mlbDebutDate": "2020-09-04",
+      "batSide": {
+        "code": "R",
+        "description": "Right"
+      },
+      "pitchHand": {
+        "code": "R",
+        "description": "Right"
+      },
+      "nameFirstLast": "Luis Garcia",
+      "nameSlug": "luis-garcia-677651",
+      "firstLastName": "Luis Garcia",
+      "lastFirstName": "Garcia, Luis",
+      "lastInitName": "Garcia, L",
+      "initLastName": "L Garcia",
+      "fullFMLName": "Luis Heibardo Garcia",
+      "fullLFMName": "Garcia, Luis Heibardo",
+      "strikeZoneTop": 3.255,
+      "strikeZoneBottom": 1.643
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "copyright": "Copyright 2026 MLB Advanced Media, L.P.  Use of any content on this page acknowledges agreement to the terms posted here http://gdx.mlb.com/components/copyright.txt",
+  "people": [
+    {
+      "id": 472610,
+      "fullName": "Luis Garc\u00eda",
+      "link": "/api/v1/people/472610",
+      "firstName": "Luis",
+      "lastName": "Garc\u00eda",
+      "primaryNumber": "40",
+      "birthDate": "1987-01-30",
+      "currentAge": 39,
+      "birthCity": "Santo Domingo",
+      "birthCountry": "Dominican Republic",
+      "height": "6' 2\"",
+      "weight": 240,
+      "active": true,
+      "currentTeam": {
+        "id": 121,
+        "name": "New York Mets",
+        "link": "/api/v1/teams/121"
+      },
+      "primaryPosition": {
+        "code": "1",
+        "name": "Pitcher",
+        "type": "Pitcher",
+        "abbreviation": "P"
+      },
+      "useName": "Luis",
+      "useLastName": "Garc\u00eda",
+      "middleName": "Amado",
+      "boxscoreName": "Garc\u00eda, L",
+      "nickName": "Amadito",
+      "gender": "M",
+      "isPlayer": true,
+      "isVerified": true,
+      "mlbDebutDate": "2013-07-10",
+      "batSide": {
+        "code": "R",
+        "description": "Right"
+      },
+      "pitchHand": {
+        "code": "R",
+        "description": "Right"
+      },
+      "nameFirstLast": "Luis Garc\u00eda",
+      "nameSlug": "luis-garcia-472610",
+      "firstLastName": "Luis Garc\u00eda",
+      "lastFirstName": "Garc\u00eda, Luis",
+      "lastInitName": "Garc\u00eda, L",
+      "initLastName": "L Garc\u00eda",
+      "fullFMLName": "Luis Amado Garc\u00eda",
+      "fullLFMName": "Garc\u00eda, Luis Amado",
+      "strikeZoneTop": 3.299,
+      "strikeZoneBottom": 1.665
+    }
+  ]
+}
