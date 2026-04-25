@@ -18,16 +18,17 @@ dpkg-reconfigure --priority=low unattended-upgrades
 # ── Non-root deploy user ─────────────────────────────────────────────────────
 if ! id "$DEPLOY_USER" &>/dev/null; then
     useradd -m -s /bin/bash "$DEPLOY_USER"
-    mkdir -p "/home/$DEPLOY_USER/.ssh"
-    # Copy root's authorized_keys so you can still SSH in as deploy
-    if [[ -f /root/.ssh/authorized_keys ]]; then
-        cp /root/.ssh/authorized_keys "/home/$DEPLOY_USER/.ssh/authorized_keys"
-        chown -R "$DEPLOY_USER:$DEPLOY_USER" "/home/$DEPLOY_USER/.ssh"
-        chmod 700 "/home/$DEPLOY_USER/.ssh"
-        chmod 600 "/home/$DEPLOY_USER/.ssh/authorized_keys"
-    fi
-    usermod -aG docker "$DEPLOY_USER" 2>/dev/null || true
 fi
+mkdir -p "/home/$DEPLOY_USER/.ssh"
+if [[ -n "${DEPLOY_PUBKEY:-}" ]]; then
+    echo "$DEPLOY_PUBKEY" > "/home/$DEPLOY_USER/.ssh/authorized_keys"
+elif [[ -f /root/.ssh/authorized_keys ]]; then
+    cp /root/.ssh/authorized_keys "/home/$DEPLOY_USER/.ssh/authorized_keys"
+fi
+chown -R "$DEPLOY_USER:$DEPLOY_USER" "/home/$DEPLOY_USER/.ssh"
+chmod 700 "/home/$DEPLOY_USER/.ssh"
+chmod 600 "/home/$DEPLOY_USER/.ssh/authorized_keys"
+usermod -aG docker "$DEPLOY_USER" 2>/dev/null || true
 
 # ── Docker ───────────────────────────────────────────────────────────────────
 if ! command -v docker &>/dev/null; then

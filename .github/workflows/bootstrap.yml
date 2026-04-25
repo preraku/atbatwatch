@@ -13,11 +13,13 @@ jobs:
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PUBKEY: ${{ secrets.DEPLOY_PUBKEY }}
         run: |
           echo "$DEPLOY_KEY" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
-          ssh -i /tmp/deploy_key \
-              -o StrictHostKeyChecking=no \
-              -o BatchMode=yes \
-              root@"$DEPLOY_HOST" 'bash -s' < deploy/bootstrap.sh
+          { echo "export DEPLOY_PUBKEY='${DEPLOY_PUBKEY}'"; cat deploy/bootstrap.sh; } | \
+            ssh -i /tmp/deploy_key \
+                -o StrictHostKeyChecking=no \
+                -o BatchMode=yes \
+                root@"$DEPLOY_HOST" bash
           rm -f /tmp/deploy_key
