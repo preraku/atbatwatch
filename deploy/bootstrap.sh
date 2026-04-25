@@ -2,20 +2,13 @@
 # One-shot setup for a fresh Hetzner CX22 (Ubuntu 24.04).
 # Run as root: bash bootstrap.sh
 set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
 REPO_URL="https://github.com/preraku/atbatwatch.git"
 APP_DIR="/opt/atbatwatch"
 DEPLOY_USER="deploy"
 
-# ── System updates ──────────────────────────────────────────────────────────
-apt-get update -y
-apt-get upgrade -y
-apt-get install -y ca-certificates curl gnupg ufw unattended-upgrades git
-
-# Enable unattended security upgrades
-dpkg-reconfigure --priority=low unattended-upgrades
-
-# ── Non-root deploy user ─────────────────────────────────────────────────────
+# ── Non-root deploy user (first — so SSH works even if later steps fail) ─────
 if ! id "$DEPLOY_USER" &>/dev/null; then
     useradd -m -s /bin/bash "$DEPLOY_USER"
 fi
@@ -29,6 +22,14 @@ chown -R "$DEPLOY_USER:$DEPLOY_USER" "/home/$DEPLOY_USER/.ssh"
 chmod 700 "/home/$DEPLOY_USER/.ssh"
 chmod 600 "/home/$DEPLOY_USER/.ssh/authorized_keys"
 usermod -aG docker "$DEPLOY_USER" 2>/dev/null || true
+
+# ── System updates ──────────────────────────────────────────────────────────
+apt-get update -y
+apt-get upgrade -y
+apt-get install -y ca-certificates curl gnupg ufw unattended-upgrades git
+
+# Enable unattended security upgrades (non-interactive)
+dpkg-reconfigure -f noninteractive unattended-upgrades
 
 # ── Docker ───────────────────────────────────────────────────────────────────
 if ! command -v docker &>/dev/null; then
