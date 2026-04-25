@@ -62,8 +62,8 @@ ufw --force enable
 # ── Clone repo ───────────────────────────────────────────────────────────────
 if [[ ! -d "$APP_DIR/.git" ]]; then
     git clone "$REPO_URL" "$APP_DIR"
-    chown -R "$DEPLOY_USER:$DEPLOY_USER" "$APP_DIR"
 fi
+chown -R "$DEPLOY_USER:$DEPLOY_USER" "$APP_DIR"
 
 # ── Secrets ──────────────────────────────────────────────────────────────────
 # .env is written on every deploy by the GitHub Actions workflow via scp.
