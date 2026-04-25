@@ -1,0 +1,26 @@
+name: Bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      host:
+        description: "Server IP or hostname"
+        required: true
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run bootstrap on server
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        run: |
+          echo "$DEPLOY_KEY" > /tmp/deploy_key
+          chmod 600 /tmp/deploy_key
+          ssh -i /tmp/deploy_key \
+              -o StrictHostKeyChecking=no \
+              -o BatchMode=yes \
+              root@${{ inputs.host }} 'bash -s' < deploy/bootstrap.sh
+          rm -f /tmp/deploy_key
