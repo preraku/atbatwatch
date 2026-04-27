@@ -1,7 +1,8 @@
 import json
-from datetime import date
+from datetime import datetime
 from pathlib import Path
 from typing import Protocol
+from zoneinfo import ZoneInfo
 
 import httpx
 
@@ -39,7 +40,7 @@ class MlbApi:
 
     async def get_schedule(self, game_date: str | None = None) -> ScheduleResponse:
         if game_date is None:
-            game_date = date.today().strftime("%m/%d/%Y")
+            game_date = datetime.now(ZoneInfo("America/New_York")).strftime("%m/%d/%Y")
         resp = await self._client.get(
             "/api/v1/schedule",
             params={"sportId": 1, "date": game_date, "hydrate": "team,linescore"},
