@@ -32,6 +32,7 @@ dev = [
     "pytest-mock>=3.12",
     "fakeredis>=2.20",
     "aiosqlite>=0.20",
+    "time-machine>=2.9",
     "memray>=1.19.3",
 ]
 

@@ -18,6 +18,11 @@ FixtureData = LiveFeedResponse | ScheduleResponse
 BASE_URL = "https://ws.statsapi.mlb.com"
 
 
+def _eastern_date() -> str:
+    """Return today's date in MM/DD/YYYY using Eastern Time (handles EDT/EST automatically)."""
+    return datetime.now(ZoneInfo("America/New_York")).strftime("%m/%d/%Y")
+
+
 class MlbApiProtocol(Protocol):
     async def get_schedule(self, game_date: str | None = None) -> ScheduleResponse: ...
 
@@ -40,7 +45,7 @@ class MlbApi:
 
     async def get_schedule(self, game_date: str | None = None) -> ScheduleResponse:
         if game_date is None:
-            game_date = datetime.now(ZoneInfo("America/New_York")).strftime("%m/%d/%Y")
+            game_date = _eastern_date()
         resp = await self._client.get(
             "/api/v1/schedule",
             params={"sportId": 1, "date": game_date, "hydrate": "team,linescore"},
