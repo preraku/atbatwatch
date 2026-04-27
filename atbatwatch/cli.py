@@ -214,6 +214,21 @@ async def _watch(fixture: str | None) -> None:
 
 
 # ---------------------------------------------------------------------------
+# HTTP API server
+# ---------------------------------------------------------------------------
+
+
+@main.command("run-api")
+@click.option("--host", default="0.0.0.0", show_default=True)
+@click.option("--port", default=8000, show_default=True, type=int)
+def run_api_cmd(host: str, port: int):
+    """Run the HTTP API server (FastAPI + uvicorn)."""
+    import uvicorn
+
+    uvicorn.run("atbatwatch.http_api:app", host=host, port=port)
+
+
+# ---------------------------------------------------------------------------
 # Stream-based worker commands (Phase 2)
 # ---------------------------------------------------------------------------
 

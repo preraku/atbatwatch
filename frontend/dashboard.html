@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>atbatwatch — Dashboard</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 16px; }
+    h1 { font-size: 1.2rem; }
+    h2 { font-size: 1rem; margin-top: 32px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+    input { padding: 6px 8px; font-family: system-ui, sans-serif; font-size: 0.9rem; border: 1px solid #999; width: 260px; }
+    button { padding: 6px 12px; font-family: system-ui, sans-serif; cursor: pointer; margin-left: 4px; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    li:last-child { border-bottom: none; }
+    .player-info { display: flex; flex-direction: column; gap: 2px; }
+    .player-name { font-size: 0.9rem; }
+    .player-meta { font-size: 0.78rem; color: #666; }
+    .results { margin-top: 8px; }
+    .result-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .result-item:last-child { border-bottom: none; }
+    .err { color: #c00; font-size: 0.85rem; }
+    .empty { color: #888; font-size: 0.85rem; }
+    nav { display: flex; justify-content: flex-end; font-size: 0.8rem; margin-bottom: 24px; }
+    nav a { color: inherit; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <nav><a id="logout">log out</a></nav>
+  <h1>atbatwatch</h1>
+
+  <h2>Following</h2>
+  <ul id="follows-list"><li class="empty">Loading…</li></ul>
+
+  <h2>Add player</h2>
+  <div>
+    <input id="search-input" type="text" placeholder="Player name…" autocomplete="off">
+    <button id="search-btn">Search</button>
+  </div>
+  <p class="err" id="search-err" hidden></p>
+  <div class="results" id="results"></div>
+
+  <script type="module">
+    import { token, clearToken, request } from "./api.js";
+
+    if (!token()) { location.href = "login.html"; }
+
+    document.getElementById("logout").addEventListener("click", () => {
+      clearToken();
+      location.href = "login.html";
+    });
+
+    // ---------------------------------------------------------------------------
+    // Follows list
+    // ---------------------------------------------------------------------------
+
+    function playerMeta(team, position) {
+      const parts = [position, team].filter(Boolean);
+      return parts.length ? parts.join(" · ") : null;
+    }
+
+    async function loadFollows() {
+      const list = document.getElementById("follows-list");
+      try {
+        const data = await request("GET", "/me/follows");
+        if (data.follows.length === 0) {
+          list.innerHTML = '<li class="empty">No players followed yet.</li>';
+          return;
+        }
+        list.innerHTML = data.follows.map(p => {
+          const meta = playerMeta(p.team, p.position);
+          return `<li>
+            <div class="player-info">
+              <span class="player-name">${p.full_name}</span>
+              ${meta ? `<span class="player-meta">${meta}</span>` : ""}
+            </div>
+            <button data-id="${p.player_id}" data-name="${p.full_name}" class="unfollow-btn">Unfollow</button>
+          </li>`;
+        }).join("");
+        list.querySelectorAll(".unfollow-btn").forEach(btn => {
+          btn.addEventListener("click", () => unfollow(+btn.dataset.id, btn.dataset.name));
+        });
+      } catch (err) {
+        list.innerHTML = `<li class="err">${err.message}</li>`;
+      }
+    }
+
+    async function unfollow(playerId, name) {
+      if (!confirm(`Unfollow ${name}?`)) return;
+      try {
+        await request("DELETE", `/me/follows/${playerId}`);
+        await loadFollows();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    loadFollows();
+
+    // ---------------------------------------------------------------------------
+    // Search + follow
+    // ---------------------------------------------------------------------------
+
+    const searchInput = document.getElementById("search-input");
+    const resultsEl = document.getElementById("results");
+    const searchErr = document.getElementById("search-err");
+
+    document.getElementById("search-btn").addEventListener("click", doSearch);
+    searchInput.addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
+
+    async function doSearch() {
+      const q = searchInput.value.trim();
+      if (!q) return;
+      searchErr.hidden = true;
+      resultsEl.innerHTML = "Searching…";
+      try {
+        const data = await request("GET", `/players/search?q=${encodeURIComponent(q)}`);
+        if (data.players.length === 0) {
+          resultsEl.innerHTML = '<div class="empty">No active MLB players found.</div>';
+          return;
+        }
+        resultsEl.innerHTML = data.players.map(p => {
+          const meta = playerMeta(p.team, p.position);
+          return `<div class="result-item">
+            <div class="player-info">
+              <span class="player-name">${p.full_name}</span>
+              ${meta ? `<span class="player-meta">${meta}</span>` : ""}
+            </div>
+            <button
+              data-id="${p.player_id}"
+              data-name="${p.full_name}"
+              data-team="${p.team ?? ""}"
+              data-position="${p.position ?? ""}"
+              class="follow-btn">Follow</button>
+          </div>`;
+        }).join("");
+        resultsEl.querySelectorAll(".follow-btn").forEach(btn => {
+          btn.addEventListener("click", () =>
+            follow(+btn.dataset.id, btn.dataset.name, btn.dataset.team || null, btn.dataset.position || null, btn)
+          );
+        });
+      } catch (err) {
+        resultsEl.innerHTML = "";
+        searchErr.textContent = err.message;
+        searchErr.hidden = false;
+      }
+    }
+
+    async function follow(playerId, fullName, team, position, btn) {
+      btn.disabled = true;
+      btn.textContent = "…";
+      try {
+        await request("POST", "/me/follows", { player_id: playerId, full_name: fullName, team, position });
+        btn.textContent = "Following";
+        await loadFollows();
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = "Follow";
+        alert(err.message);
+      }
+    }
+  </script>
+</body>
+</html>

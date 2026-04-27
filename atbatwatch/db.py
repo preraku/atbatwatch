@@ -14,6 +14,7 @@ class User(Base):
 
     user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     email: Mapped[str] = mapped_column(String(255), unique=True)
+    password_hash: Mapped[str] = mapped_column(String(255), server_default="")
     notification_target_type: Mapped[str] = mapped_column(String(20))
     notification_target_id: Mapped[str] = mapped_column(String(1024))
     created_at: Mapped[datetime] = mapped_column(
@@ -26,6 +27,8 @@ class Player(Base):
 
     player_id: Mapped[int] = mapped_column(primary_key=True)  # = MLB player ID
     full_name: Mapped[str] = mapped_column(String(255))
+    team: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    position: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
 
 class Follow(Base):

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    // Redirect based on auth state
+    if (localStorage.getItem("token")) {
+      location.replace("dashboard.html");
+    } else {
+      location.replace("login.html");
+    }
+  </script>
+</head>
+<body></body>
+</html>

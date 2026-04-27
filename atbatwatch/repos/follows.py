@@ -4,6 +4,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from atbatwatch.db import Follow, Player, User
 
 
+async def get_follows_for_user(user_id: int, session: AsyncSession) -> list[Player]:
+    result = await session.execute(
+        select(Player)
+        .join(Follow, Player.player_id == Follow.player_id)
+        .where(Follow.user_id == user_id)
+        .order_by(Player.full_name)
+    )
+    return list(result.scalars())
+
+
 async def get_followers(player_id: int, session: AsyncSession) -> list[User]:
     result = await session.execute(
         select(User)
@@ -13,18 +23,35 @@ async def get_followers(player_id: int, session: AsyncSession) -> list[User]:
     return list(result.scalars())
 
 
-async def upsert_player(player_id: int, full_name: str, session: AsyncSession) -> None:
+async def upsert_player(
+    player_id: int,
+    full_name: str,
+    session: AsyncSession,
+    team: str | None = None,
+    position: str | None = None,
+) -> None:
     existing = await session.get(Player, player_id)
     if existing is None:
-        session.add(Player(player_id=player_id, full_name=full_name))
+        session.add(
+            Player(
+                player_id=player_id, full_name=full_name, team=team, position=position
+            )
+        )
     else:
         existing.full_name = full_name
+        if team is not None:
+            existing.team = team
+        if position is not None:
+            existing.position = position
     await session.commit()
 
 
-async def create_user(email: str, webhook_url: str, session: AsyncSession) -> User:
+async def create_user(
+    email: str, webhook_url: str, session: AsyncSession, password_hash: str = ""
+) -> User:
     user = User(
         email=email,
+        password_hash=password_hash,
         notification_target_type="discord",
         notification_target_id=webhook_url,
     )

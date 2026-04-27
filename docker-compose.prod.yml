@@ -108,6 +108,26 @@ services:
         max-size: "30m"
         max-file: "1"
 
+  api:
+    build: .
+    command: ["atbatwatch", "run-api"]
+    env_file: .env
+    environment:
+      PYTHONUNBUFFERED: "1"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: "30m"
+        max-file: "1"
+
   caddy:
     image: caddy:2-alpine
     restart: unless-stopped

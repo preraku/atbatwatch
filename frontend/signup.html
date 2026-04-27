@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>atbatwatch — Sign up</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 60px auto; padding: 0 16px; }
+    h1 { font-size: 1.2rem; margin-bottom: 24px; }
+    label { display: block; margin-bottom: 4px; font-size: 0.9rem; }
+    input { display: block; width: 100%; box-sizing: border-box; padding: 6px 8px; margin-bottom: 16px; font-family: system-ui, sans-serif; font-size: 0.9rem; border: 1px solid #999; }
+    button { padding: 7px 16px; font-family: system-ui, sans-serif; cursor: pointer; }
+    .err { color: #c00; margin-top: 12px; font-size: 0.85rem; }
+    .note { font-size: 0.8rem; color: #555; margin-bottom: 4px; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <h1>atbatwatch / sign up</h1>
+  <form id="form">
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="email" required>
+
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="new-password" required>
+
+    <label for="webhook">Discord webhook URL</label>
+    <p class="note">Notifications are sent to this webhook. Create one in your Discord server under Server Settings → Integrations → Webhooks.</p>
+    <input id="webhook" type="url" placeholder="https://discord.com/api/webhooks/..." required>
+
+    <button type="submit">Create account</button>
+    <p class="err" id="err" hidden></p>
+  </form>
+  <p style="margin-top:24px;font-size:0.85rem;">Already have an account? <a href="login.html">Log in</a></p>
+
+  <script type="module">
+    import { setToken, request } from "./api.js";
+
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const errEl = document.getElementById("err");
+      errEl.hidden = true;
+      try {
+        const data = await request("POST", "/auth/signup", {
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+          discord_webhook: document.getElementById("webhook").value.trim(),
+        });
+        setToken(data.token);
+        location.href = "dashboard.html";
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>
