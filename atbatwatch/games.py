@@ -36,12 +36,23 @@ async def get_todays_games(
 
 
 def extract_inning_state(live_data: LiveFeedResponse) -> tuple[int, str, int]:
-    """Returns (inning, half, outs) from the linescore, or (0, '', 0) when unavailable."""
+    """Returns (inning, half, outs) from the linescore, or (0, '', 0) when unavailable.
+
+    When outs == 3 the half-inning just ended and the feed is between halves.
+    Advance to the next half so notifications show the upcoming at-bat context.
+    """
     try:
         ls = live_data["liveData"]["linescore"]
         inning = ls.get("currentInning", 0)
-        half = "Top" if ls.get("isTopInning", True) else "Bot"
+        is_top = ls.get("isTopInning", True)
         outs = ls.get("outs", 0)
+        if outs == 3:
+            # Between half-innings: advance to the half that is about to bat.
+            if is_top:
+                return inning, "Bot", 0
+            else:
+                return inning + 1, "Top", 0
+        half = "Top" if is_top else "Bot"
         return inning, half, outs
     except (KeyError, TypeError):
         return 0, "", 0
@@ -55,13 +66,25 @@ def extract_offense_state(live_data: LiveFeedResponse) -> Offense:
         return cast(Offense, {})
 
 
-_PRE_GAME_STATES = {"Warmup", "Pre-Game", "Delayed Start", "Scheduled"}
+_NON_LIVE_STATES = {
+    "Warmup",
+    "Pre-Game",
+    "Delayed Start",
+    "Scheduled",
+    "Final",
+    "Game Over",
+    "Completed",
+    "Completed Early",
+    "Postponed",
+    "Cancelled",
+    "Suspended",
+}
 
 
 def is_game_in_progress(live_data: LiveFeedResponse) -> bool:
-    """Returns False for warmup/pre-game states where offense data is not meaningful."""
+    """Returns False for any state where offense data is not actionable."""
     detailed = live_data.get("gameData", {}).get("status", {}).get("detailedState", "")
-    return detailed not in _PRE_GAME_STATES
+    return detailed not in _NON_LIVE_STATES
 
 
 def get_player_status(player_id: int, offense: Offense) -> str:
