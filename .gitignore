@@ -4,3 +4,4 @@ docs/config
 *.pyc
 .venv/
 memray*
+.playwright-cli/

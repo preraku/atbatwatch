@@ -43,3 +43,4 @@ In production all four run as separate Docker Compose services. Locally, `run-al
 - `docs/local_prod_dry_run.md` — full prod-like stack locally with `docker-compose.prod.yml`
 - `docs/mlb_api.md` — MLB Stats API endpoints and offense-state payload shape
 - `docs/scale_up_plan.md` — system design, data model, and scaling path to ~1M users
+- `docs/agent_frontend_testing.md` — how to verify frontend changes against the local stack
