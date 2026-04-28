@@ -1,6 +1,8 @@
 """Polling loop: fetches live MLB game state and pushes transitions via diff_engine."""
 
 import asyncio
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import redis.asyncio as aioredis
 
@@ -8,6 +10,25 @@ from atbatwatch.api import MlbApiProtocol
 from atbatwatch.config import Config
 from atbatwatch.diff_engine import process_game
 from atbatwatch.games import get_todays_games
+
+
+async def _get_live_games(api: MlbApiProtocol):
+    """Return live games from today's schedule, falling back to yesterday's if none found.
+
+    Late-night West Coast games can still be in progress after midnight Eastern, at which
+    point _eastern_date() has already rolled to the next day and the schedule call returns
+    no games. Checking yesterday catches those stragglers.
+    """
+    games = await get_todays_games(api)
+    live_games = [g for g in games if g.status == "Live"]
+    if not live_games:
+        now_et = datetime.now(ZoneInfo("America/New_York"))
+        # Only look back if it's early morning (games can't still be live after 6 AM ET)
+        if now_et.hour < 6:
+            yesterday = (now_et - timedelta(days=1)).strftime("%m/%d/%Y")
+            yesterday_games = await get_todays_games(api, game_date=yesterday)
+            live_games = [g for g in yesterday_games if g.status == "Live"]
+    return live_games
 
 
 async def run_poller(
@@ -19,8 +40,7 @@ async def run_poller(
     timecodes: dict[int, str] = {}
     while True:
         try:
-            games = await get_todays_games(api)
-            live_games = [g for g in games if g.status == "Live"]
+            live_games = await _get_live_games(api)
             if not live_games:
                 print("Poller: no live games.")
             for game in live_games:

@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Protocol
+from zoneinfo import ZoneInfo
 
 import httpx
 
@@ -59,7 +60,7 @@ class ConsoleNotifier:
         inning_half: str,
         outs: int,
     ) -> None:
-        ts = datetime.now().strftime("%H:%M:%S")
+        ts = datetime.now(ZoneInfo("America/New_York")).strftime("%H:%M:%S ET")
         label = "AT BAT" if status == "batting" else "ON DECK"
         matchup = f"{game_info.away_team_name} @ {game_info.home_team_name}"
         out_word = "out" if outs == 1 else "outs"
