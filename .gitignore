@@ -1,5 +1,5 @@
-docs/
 */__pycache__
+docs/config
 .env
 *.pyc
 .venv/
