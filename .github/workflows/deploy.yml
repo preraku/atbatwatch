@@ -21,6 +21,8 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           REDIS_URL: ${{ secrets.REDIS_URL }}
           DOMAIN: ${{ secrets.DOMAIN }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
         run: |
           echo "$DEPLOY_KEY" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
@@ -33,6 +35,8 @@ jobs:
             echo "DATABASE_URL=${DATABASE_URL}"
             echo "REDIS_URL=${REDIS_URL}"
             [[ -n "$DOMAIN" ]] && echo "DOMAIN=${DOMAIN}" || true
+            echo "JWT_SECRET=${JWT_SECRET}"
+            echo "CORS_ORIGIN=${CORS_ORIGIN}"
           } > /tmp/app.env
 
           scp -i /tmp/deploy_key \
