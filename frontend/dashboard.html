@@ -4,25 +4,53 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>atbatwatch — Dashboard</title>
+  <script>
+    (function () {
+      var saved = localStorage.getItem("theme");
+      var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", (saved ? saved === "dark" : prefersDark) ? "dark" : "light");
+    })();
+  </script>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 16px; }
+    :root {
+      --bg: #ffffff;
+      --fg: #111111;
+      --border: #ccc;
+      --border-light: #eee;
+      --meta: #666;
+      --empty: #888;
+      --err: #c00;
+    }
+    [data-theme="dark"] {
+      --bg: #141414;
+      --fg: #e0e0e0;
+      --border: #444;
+      --border-light: #2a2a2a;
+      --meta: #999;
+      --empty: #777;
+      --err: #ff6b6b;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 16px; background: var(--bg); color: var(--fg); transition: background 0.2s, color 0.2s; }
     h1 { font-size: 1.2rem; }
-    h2 { font-size: 1rem; margin-top: 32px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
-    input { padding: 6px 8px; font-family: system-ui, sans-serif; font-size: 0.9rem; border: 1px solid #999; width: 260px; }
-    button { padding: 6px 12px; font-family: system-ui, sans-serif; cursor: pointer; margin-left: 4px; }
+    h2 { font-size: 1rem; margin-top: 32px; border-bottom: 1px solid var(--border); padding-bottom: 4px; }
+    input { padding: 6px 8px; font-family: system-ui, sans-serif; font-size: 0.9rem; border: 1px solid var(--border); width: 260px; background: var(--bg); color: var(--fg); }
+    button { padding: 6px 12px; font-family: system-ui, sans-serif; cursor: pointer; margin-left: 4px; border: 1px solid var(--border); background: var(--bg); color: var(--fg); }
     ul { list-style: none; padding: 0; margin: 0; }
-    li { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    li { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); }
     li:last-child { border-bottom: none; }
     .player-info { display: flex; flex-direction: column; gap: 2px; }
     .player-name { font-size: 0.9rem; }
-    .player-meta { font-size: 0.78rem; color: #666; }
+    .player-meta { font-size: 0.78rem; color: var(--meta); }
     .results { margin-top: 8px; }
-    .result-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    .result-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); }
     .result-item:last-child { border-bottom: none; }
-    .err { color: #c00; font-size: 0.85rem; }
-    .empty { color: #888; font-size: 0.85rem; }
+    .err { color: var(--err); font-size: 0.85rem; }
+    .empty { color: var(--empty); font-size: 0.85rem; }
     nav { display: flex; justify-content: flex-end; font-size: 0.8rem; margin-bottom: 24px; }
     nav a { color: inherit; cursor: pointer; }
+    #theme-toggle { position: fixed; bottom: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg); color: var(--fg); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; transition: background 0.2s, border-color 0.2s, opacity 0.15s; z-index: 1000; }
+    #theme-toggle:hover { opacity: 0.6; }
   </style>
 </head>
 <body>
@@ -42,6 +70,9 @@
 
   <script type="module">
     import { token, clearToken, request } from "./api.js";
+    import { initTheme } from "./theme.js";
+
+    initTheme();
 
     if (!token()) { location.href = "login.html"; }
 

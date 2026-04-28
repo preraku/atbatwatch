@@ -4,15 +4,39 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>atbatwatch — Sign up</title>
+  <script>
+    (function () {
+      var saved = localStorage.getItem("theme");
+      var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.setAttribute("data-theme", (saved ? saved === "dark" : prefersDark) ? "dark" : "light");
+    })();
+  </script>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 60px auto; padding: 0 16px; }
+    :root {
+      --bg: #ffffff;
+      --fg: #111111;
+      --border: #999;
+      --err: #c00;
+      --note: #555;
+    }
+    [data-theme="dark"] {
+      --bg: #141414;
+      --fg: #e0e0e0;
+      --border: #555;
+      --err: #ff6b6b;
+      --note: #aaa;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; max-width: 480px; margin: 60px auto; padding: 0 16px; background: var(--bg); color: var(--fg); transition: background 0.2s, color 0.2s; }
     h1 { font-size: 1.2rem; margin-bottom: 24px; }
     label { display: block; margin-bottom: 4px; font-size: 0.9rem; }
-    input { display: block; width: 100%; box-sizing: border-box; padding: 6px 8px; margin-bottom: 16px; font-family: system-ui, sans-serif; font-size: 0.9rem; border: 1px solid #999; }
-    button { padding: 7px 16px; font-family: system-ui, sans-serif; cursor: pointer; }
-    .err { color: #c00; margin-top: 12px; font-size: 0.85rem; }
-    .note { font-size: 0.8rem; color: #555; margin-bottom: 4px; }
+    input { display: block; width: 100%; padding: 6px 8px; margin-bottom: 16px; font-family: system-ui, sans-serif; font-size: 0.9rem; border: 1px solid var(--border); background: var(--bg); color: var(--fg); }
+    button { padding: 7px 16px; font-family: system-ui, sans-serif; cursor: pointer; border: 1px solid var(--border); background: var(--bg); color: var(--fg); }
+    .err { color: var(--err); margin-top: 12px; font-size: 0.85rem; }
+    .note { font-size: 0.8rem; color: var(--note); margin-bottom: 4px; }
     a { color: inherit; }
+    #theme-toggle { position: fixed; bottom: 20px; right: 20px; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg); color: var(--fg); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; transition: background 0.2s, border-color 0.2s, opacity 0.15s; z-index: 1000; }
+    #theme-toggle:hover { opacity: 0.6; }
   </style>
 </head>
 <body>
@@ -35,6 +59,9 @@
 
   <script type="module">
     import { setToken, request } from "./api.js";
+    import { initTheme } from "./theme.js";
+
+    initTheme();
 
     document.getElementById("form").addEventListener("submit", async (e) => {
       e.preventDefault();
