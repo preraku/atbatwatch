@@ -96,10 +96,10 @@ async def _lookup(name: str) -> None:
             )
 
         choices = {_fmt(c): c for c in e.candidates}
-        selected_label = questionary.select(
+        selected_label = await questionary.select(
             f"Multiple active players match '{e.name}'. Select one:",
             choices=list(choices.keys()),
-        ).ask()
+        ).ask_async()
         if selected_label is None:
             sys.exit(0)
         c = choices[selected_label]
