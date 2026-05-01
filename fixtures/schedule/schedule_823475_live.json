@@ -1,0 +1,459 @@
+{
+  "copyright": "Copyright 2026 MLB Advanced Media, L.P.  Use of any content on this page acknowledges agreement to the terms posted here http://gdx.mlb.com/components/copyright.txt",
+  "totalItems": 1,
+  "totalEvents": 0,
+  "totalGames": 1,
+  "totalGamesInProgress": 1,
+  "dates": [
+    {
+      "date": "2026-04-19",
+      "totalItems": 1,
+      "totalEvents": 0,
+      "totalGames": 1,
+      "totalGamesInProgress": 1,
+      "games": [
+        {
+          "gamePk": 823475,
+          "gameGuid": "17be3471-a34c-4394-b740-9b790c1ca9c2",
+          "link": "/api/v1.1/game/823475/feed/live",
+          "gameType": "R",
+          "season": "2026",
+          "gameDate": "2026-04-19T23:20:00Z",
+          "officialDate": "2026-04-19",
+          "status": {
+            "abstractGameState": "Live",
+            "codedGameState": "I",
+            "detailedState": "In Progress",
+            "statusCode": "I",
+            "startTimeTBD": false,
+            "abstractGameCode": "L"
+          },
+          "teams": {
+            "away": {
+              "team": {
+                "springLeague": {
+                  "id": 115,
+                  "name": "Grapefruit League",
+                  "link": "/api/v1/league/115",
+                  "abbreviation": "GL"
+                },
+                "allStarStatus": "N",
+                "id": 144,
+                "name": "Atlanta Braves",
+                "link": "/api/v1/teams/144",
+                "season": 2026,
+                "venue": {
+                  "id": 4705,
+                  "name": "Truist Park",
+                  "link": "/api/v1/venues/4705"
+                },
+                "springVenue": {
+                  "id": 5380,
+                  "link": "/api/v1/venues/5380"
+                },
+                "teamCode": "atl",
+                "fileCode": "atl",
+                "abbreviation": "ATL",
+                "teamName": "Braves",
+                "locationName": "Atlanta",
+                "firstYearOfPlay": "1871",
+                "league": {
+                  "id": 104,
+                  "name": "National League",
+                  "link": "/api/v1/league/104"
+                },
+                "division": {
+                  "id": 204,
+                  "name": "National League East",
+                  "link": "/api/v1/divisions/204"
+                },
+                "sport": {
+                  "id": 1,
+                  "link": "/api/v1/sports/1",
+                  "name": "Major League Baseball"
+                },
+                "shortName": "Atlanta",
+                "franchiseName": "Atlanta",
+                "clubName": "Braves",
+                "active": true
+              },
+              "leagueRecord": {
+                "wins": 15,
+                "losses": 7,
+                "pct": ".682"
+              },
+              "score": 4,
+              "isWinner": true,
+              "splitSquad": false,
+              "seriesNumber": 7,
+              "springLeague": {
+                "id": 115,
+                "name": "Grapefruit League",
+                "link": "/api/v1/league/115",
+                "abbreviation": "GL"
+              }
+            },
+            "home": {
+              "team": {
+                "springLeague": {
+                  "id": 115,
+                  "name": "Grapefruit League",
+                  "link": "/api/v1/league/115",
+                  "abbreviation": "GL"
+                },
+                "allStarStatus": "N",
+                "id": 143,
+                "name": "Philadelphia Phillies",
+                "link": "/api/v1/teams/143",
+                "season": 2026,
+                "venue": {
+                  "id": 2681,
+                  "name": "Citizens Bank Park",
+                  "link": "/api/v1/venues/2681"
+                },
+                "springVenue": {
+                  "id": 2700,
+                  "link": "/api/v1/venues/2700"
+                },
+                "teamCode": "phi",
+                "fileCode": "phi",
+                "abbreviation": "PHI",
+                "teamName": "Phillies",
+                "locationName": "Philadelphia",
+                "firstYearOfPlay": "1883",
+                "league": {
+                  "id": 104,
+                  "name": "National League",
+                  "link": "/api/v1/league/104"
+                },
+                "division": {
+                  "id": 204,
+                  "name": "National League East",
+                  "link": "/api/v1/divisions/204"
+                },
+                "sport": {
+                  "id": 1,
+                  "link": "/api/v1/sports/1",
+                  "name": "Major League Baseball"
+                },
+                "shortName": "Philadelphia",
+                "franchiseName": "Philadelphia",
+                "clubName": "Phillies",
+                "active": true
+              },
+              "leagueRecord": {
+                "wins": 8,
+                "losses": 13,
+                "pct": ".381"
+              },
+              "score": 2,
+              "isWinner": false,
+              "splitSquad": false,
+              "seriesNumber": 7,
+              "springLeague": {
+                "id": 115,
+                "name": "Grapefruit League",
+                "link": "/api/v1/league/115",
+                "abbreviation": "GL"
+              }
+            }
+          },
+          "linescore": {
+            "currentInning": 9,
+            "currentInningOrdinal": "9th",
+            "inningState": "Bottom",
+            "inningHalf": "Bottom",
+            "isTopInning": false,
+            "scheduledInnings": 9,
+            "innings": [
+              {
+                "num": 1,
+                "ordinalNum": "1st",
+                "home": {
+                  "runs": 2,
+                  "hits": 2,
+                  "errors": 0,
+                  "leftOnBase": 1
+                },
+                "away": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 0
+                }
+              },
+              {
+                "num": 2,
+                "ordinalNum": "2nd",
+                "home": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 0
+                },
+                "away": {
+                  "runs": 0,
+                  "hits": 1,
+                  "errors": 0,
+                  "leftOnBase": 2
+                }
+              },
+              {
+                "num": 3,
+                "ordinalNum": "3rd",
+                "home": {
+                  "runs": 0,
+                  "hits": 1,
+                  "errors": 0,
+                  "leftOnBase": 1
+                },
+                "away": {
+                  "runs": 1,
+                  "hits": 1,
+                  "errors": 0,
+                  "leftOnBase": 0
+                }
+              },
+              {
+                "num": 4,
+                "ordinalNum": "4th",
+                "home": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 0
+                },
+                "away": {
+                  "runs": 0,
+                  "hits": 1,
+                  "errors": 0,
+                  "leftOnBase": 2
+                }
+              },
+              {
+                "num": 5,
+                "ordinalNum": "5th",
+                "home": {
+                  "runs": 0,
+                  "hits": 2,
+                  "errors": 0,
+                  "leftOnBase": 2
+                },
+                "away": {
+                  "runs": 3,
+                  "hits": 4,
+                  "errors": 0,
+                  "leftOnBase": 2
+                }
+              },
+              {
+                "num": 6,
+                "ordinalNum": "6th",
+                "home": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 2
+                },
+                "away": {
+                  "runs": 0,
+                  "hits": 1,
+                  "errors": 0,
+                  "leftOnBase": 2
+                }
+              },
+              {
+                "num": 7,
+                "ordinalNum": "7th",
+                "home": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 1
+                },
+                "away": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 0
+                }
+              },
+              {
+                "num": 8,
+                "ordinalNum": "8th",
+                "home": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 0
+                },
+                "away": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 1
+                }
+              },
+              {
+                "num": 9,
+                "ordinalNum": "9th",
+                "home": {
+                  "runs": 0,
+                  "hits": 1,
+                  "errors": 0,
+                  "leftOnBase": 2
+                },
+                "away": {
+                  "runs": 0,
+                  "hits": 0,
+                  "errors": 0,
+                  "leftOnBase": 0
+                }
+              }
+            ],
+            "teams": {
+              "home": {
+                "runs": 2,
+                "hits": 6,
+                "errors": 0,
+                "leftOnBase": 9
+              },
+              "away": {
+                "runs": 4,
+                "hits": 8,
+                "errors": 0,
+                "leftOnBase": 9
+              }
+            },
+            "defense": {
+              "pitcher": {
+                "id": 628452,
+                "fullName": "Raisel Iglesias",
+                "link": "/api/v1/people/628452"
+              },
+              "catcher": {
+                "id": 686948,
+                "fullName": "Drake Baldwin",
+                "link": "/api/v1/people/686948"
+              },
+              "first": {
+                "id": 621566,
+                "fullName": "Matt Olson",
+                "link": "/api/v1/people/621566"
+              },
+              "second": {
+                "id": 645277,
+                "fullName": "Ozzie Albies",
+                "link": "/api/v1/people/645277"
+              },
+              "third": {
+                "id": 663586,
+                "fullName": "Austin Riley",
+                "link": "/api/v1/people/663586"
+              },
+              "shortstop": {
+                "id": 643289,
+                "fullName": "Mauricio Dub\u00f3n",
+                "link": "/api/v1/people/643289"
+              },
+              "left": {
+                "id": 642201,
+                "fullName": "Eli White",
+                "link": "/api/v1/people/642201"
+              },
+              "center": {
+                "id": 671739,
+                "fullName": "Michael Harris II",
+                "link": "/api/v1/people/671739"
+              },
+              "right": {
+                "id": 660670,
+                "fullName": "Ronald Acu\u00f1a Jr.",
+                "link": "/api/v1/people/660670"
+              },
+              "batter": {
+                "id": 645277,
+                "fullName": "Ozzie Albies",
+                "link": "/api/v1/people/645277"
+              },
+              "onDeck": {
+                "id": 642201,
+                "fullName": "Eli White",
+                "link": "/api/v1/people/642201"
+              },
+              "inHole": {
+                "id": 642086,
+                "fullName": "Dominic Smith",
+                "link": "/api/v1/people/642086"
+              },
+              "battingOrder": 5,
+              "team": {
+                "id": 144,
+                "name": "Atlanta Braves",
+                "link": "/api/v1/teams/144"
+              }
+            },
+            "offense": {
+              "batter": {
+                "id": 656941,
+                "fullName": "Kyle Schwarber",
+                "link": "/api/v1/people/656941"
+              },
+              "onDeck": {
+                "id": 547180,
+                "fullName": "Bryce Harper",
+                "link": "/api/v1/people/547180"
+              },
+              "inHole": {
+                "id": 666969,
+                "fullName": "Adolis Garc\u00eda",
+                "link": "/api/v1/people/666969"
+              },
+              "pitcher": {
+                "id": 686751,
+                "fullName": "Seth Johnson",
+                "link": "/api/v1/people/686751"
+              },
+              "battingOrder": 2,
+              "team": {
+                "id": 143,
+                "name": "Philadelphia Phillies",
+                "link": "/api/v1/teams/143"
+              }
+            },
+            "balls": 2,
+            "strikes": 2,
+            "outs": 3
+          },
+          "venue": {
+            "id": 2681,
+            "name": "Citizens Bank Park",
+            "link": "/api/v1/venues/2681"
+          },
+          "content": {
+            "link": "/api/v1/game/823475/content"
+          },
+          "isTie": false,
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "P",
+          "tiebreaker": "N",
+          "calendarEventID": "14-823475-2026-04-19",
+          "seasonDisplay": "2026",
+          "dayNight": "night",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 145,
+          "gamesInSeries": 3,
+          "seriesGameNumber": 3,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        }
+      ],
+      "events": []
+    }
+  ]
+}

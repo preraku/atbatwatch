@@ -43,6 +43,29 @@ async def process_one(
     await redis.xack(TRANSITIONS_STREAM, FANOUT_GROUP, msg_id)
 
 
+async def fanout_once(
+    redis: aioredis.Redis,
+    session_factory: async_sessionmaker[AsyncSession],
+) -> None:
+    """Process all pending transition messages once and return."""
+    await _ensure_group(redis)
+    # pyrefly: ignore [not-async]
+    results = await redis.xreadgroup(
+        FANOUT_GROUP,
+        FANOUT_CONSUMER,
+        {TRANSITIONS_STREAM: ">"},
+        count=100,
+    )
+    if not results:
+        return
+    for _stream, messages in results:
+        for msg_id, fields in messages:
+            try:
+                await process_one(msg_id, fields, redis, session_factory)
+            except Exception as e:
+                print(f"Fanout error for msg {msg_id}: {e}")
+
+
 async def run_fanout(
     redis: aioredis.Redis,
     session_factory: async_sessionmaker[AsyncSession],

@@ -1,0 +1,2342 @@
+[
+  {
+    "diff": [
+      {
+        "op": "replace",
+        "path": "/metaData/timeStamp",
+        "value": "20260429_191342"
+      },
+      {
+        "op": "replace",
+        "path": "/metaData/gameEvents/0",
+        "value": "hit_into_play"
+      },
+      {
+        "op": "add",
+        "path": "/metaData/logicalEvents/2",
+        "value": "newRightHandedHit"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/about/endTime",
+        "value": "2026-04-29T19:13:43.173Z"
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/allPlays/45/pitchIndex/6",
+        "from": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/gamesPlayed"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/playEvents/6/pitchData/extension",
+        "value": 6.9831745711310305
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/playEvents/6/endTime",
+        "value": "2026-04-29T19:13:42.443Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/playEvents/7",
+        "value": {
+          "playId": "c0fd371d-c4ca-3a0c-8fc5-2328c91b934e",
+          "pitchData": {
+            "strikeZoneWidth": 17,
+            "endSpeed": 78.2,
+            "breaks": {
+              "spinRate": 2474,
+              "breakHorizontal": -9.6,
+              "breakAngle": 34.8,
+              "breakVertical": -36,
+              "breakVerticalInduced": 1.2,
+              "spinDirection": 46
+            },
+            "startSpeed": 86.1,
+            "zone": 5,
+            "plateTime": 0.4395740189425714,
+            "coordinates": {
+              "pfxX": 4.921009778736829,
+              "pX": 0.22191118470969404,
+              "pZ": 2.378589424808566,
+              "pfxZ": 0.782296123828436,
+              "vY0": -125.31301004586993,
+              "vZ0": -1.6930593110505283,
+              "vX0": 2.678364275474738,
+              "z0": 5.626683436180789,
+              "y0": 50.00140852503019,
+              "aX": 7.709922554168927,
+              "aY": 28.811151221585494,
+              "x": 108.54,
+              "x0": -1.5051134135901834,
+              "aZ": -30.946186543897262,
+              "y": 174.56
+            },
+            "strikeZoneDepth": 8.5,
+            "strikeZoneTop": 3.214,
+            "strikeZoneBottom": 1.622
+          },
+          "isPitch": true,
+          "pitchNumber": 7,
+          "count": {
+            "outs": 1,
+            "balls": 3,
+            "strikes": 2
+          },
+          "index": 7,
+          "details": {
+            "call": {
+              "code": "X",
+              "description": "In play, out(s)"
+            },
+            "ballColor": "rgba(26, 86, 190, 1.0)",
+            "code": "X",
+            "description": "In play, out(s)",
+            "isBall": false,
+            "isOut": false,
+            "type": {
+              "code": "ST",
+              "description": "Sweeper"
+            },
+            "trailColor": "rgba(50, 50, 50, 1.0)",
+            "hasReview": false,
+            "isInPlay": true,
+            "isStrike": false
+          },
+          "hitData": {
+            "coordinates": {},
+            "launchSpeed": 93.3,
+            "totalDistance": 319,
+            "launchAngle": 42
+          },
+          "startTime": "2026-04-29T19:13:42.443Z",
+          "endTime": "2026-04-29T19:13:43.173Z",
+          "type": "pitch"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/playEndTime",
+        "value": "2026-04-29T19:13:43.173Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/endTime",
+        "value": "2026-04-29T19:13:43.173Z"
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/currentPlay/pitchIndex/6",
+        "from": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/gamesPlayed"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/6/pitchData/extension",
+        "value": 6.9831745711310305
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/6/endTime",
+        "value": "2026-04-29T19:13:42.443Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/7",
+        "value": {
+          "playId": "c0fd371d-c4ca-3a0c-8fc5-2328c91b934e",
+          "pitchData": {
+            "strikeZoneWidth": 17,
+            "endSpeed": 78.2,
+            "breaks": {
+              "spinRate": 2474,
+              "breakHorizontal": -9.6,
+              "breakAngle": 34.8,
+              "breakVertical": -36,
+              "breakVerticalInduced": 1.2,
+              "spinDirection": 46
+            },
+            "startSpeed": 86.1,
+            "zone": 5,
+            "plateTime": 0.4395740189425714,
+            "coordinates": {
+              "pfxX": 4.921009778736829,
+              "pX": 0.22191118470969404,
+              "pZ": 2.378589424808566,
+              "pfxZ": 0.782296123828436,
+              "vY0": -125.31301004586993,
+              "vZ0": -1.6930593110505283,
+              "vX0": 2.678364275474738,
+              "z0": 5.626683436180789,
+              "y0": 50.00140852503019,
+              "aX": 7.709922554168927,
+              "aY": 28.811151221585494,
+              "x": 108.54,
+              "x0": -1.5051134135901834,
+              "aZ": -30.946186543897262,
+              "y": 174.56
+            },
+            "strikeZoneDepth": 8.5,
+            "strikeZoneTop": 3.214,
+            "strikeZoneBottom": 1.622
+          },
+          "isPitch": true,
+          "pitchNumber": 7,
+          "count": {
+            "outs": 1,
+            "balls": 3,
+            "strikes": 2
+          },
+          "index": 7,
+          "details": {
+            "call": {
+              "code": "X",
+              "description": "In play, out(s)"
+            },
+            "ballColor": "rgba(26, 86, 190, 1.0)",
+            "code": "X",
+            "description": "In play, out(s)",
+            "isBall": false,
+            "isOut": false,
+            "type": {
+              "code": "ST",
+              "description": "Sweeper"
+            },
+            "trailColor": "rgba(50, 50, 50, 1.0)",
+            "hasReview": false,
+            "isInPlay": true,
+            "isStrike": false
+          },
+          "hitData": {
+            "coordinates": {},
+            "launchSpeed": 93.3,
+            "totalDistance": 319,
+            "launchAngle": 42
+          },
+          "startTime": "2026-04-29T19:13:42.443Z",
+          "endTime": "2026-04-29T19:13:43.173Z",
+          "type": "pitch"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEndTime",
+        "value": "2026-04-29T19:13:43.173Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/numberOfPitches",
+        "value": 90
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/pitchesThrown",
+        "value": 90
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/strikes",
+        "value": 61
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/strikePercentage",
+        "value": ".680"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/pitchesPerInning",
+        "value": "16.88"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/numberOfPitches",
+        "value": 90
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/pitchesThrown",
+        "value": 90
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/strikes",
+        "value": 61
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/strikePercentage",
+        "value": ".680"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/numberOfPitches",
+        "value": 635
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/pitchesThrown",
+        "value": 635
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/strikes",
+        "value": 429
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/pitchesPerInning",
+        "value": "14.22"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/info/1/value",
+        "value": "Kirby 90-61; Bradley, T 85-53."
+      }
+    ]
+  },
+  {
+    "diff": [
+      {
+        "op": "replace",
+        "path": "/metaData/timeStamp",
+        "value": "20260429_191401"
+      },
+      {
+        "op": "replace",
+        "path": "/metaData/gameEvents/0",
+        "value": "field_out"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/result/isOut",
+        "value": true
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/result/event",
+        "value": "Flyout"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/result/eventType",
+        "value": "field_out"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/result/description",
+        "value": "Luke Keaschall flies out to center fielder Julio Rodr\u00edguez."
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/about/endTime",
+        "value": "2026-04-29T19:14:01.593Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/about/isComplete",
+        "value": true
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/about/hasOut",
+        "value": true
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/allPlays/45/about/hasReview",
+        "from": "/liveData/plays/allPlays/45/about/isTopInning"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/count/outs",
+        "value": 2
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/allPlays/45/runnerIndex/0",
+        "from": "/liveData/plays/allPlays/45/result/rbi"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/runners/0",
+        "value": {
+          "credits": [
+            {
+              "position": {
+                "code": "8",
+                "name": "Outfielder",
+                "type": "Outfielder",
+                "abbreviation": "CF"
+              },
+              "credit": "f_putout",
+              "player": {
+                "link": "/api/v1/people/677594",
+                "id": 677594
+              }
+            }
+          ],
+          "details": {
+            "playIndex": 7,
+            "responsiblePitcher": null,
+            "earned": false,
+            "rbi": false,
+            "teamUnearned": false,
+            "eventType": "field_out",
+            "isScoringEvent": false,
+            "event": "Flyout",
+            "runner": {
+              "link": "/api/v1/people/807712",
+              "fullName": "Luke Keaschall",
+              "id": 807712
+            },
+            "movementReason": null
+          },
+          "movement": {
+            "outNumber": 2,
+            "outBase": "1B",
+            "start": null,
+            "isOut": true,
+            "end": null,
+            "originBase": null
+          }
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/playEvents/7/details/isOut",
+        "value": true
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/playEvents/7/hitData/coordinates/coordX",
+        "value": 103.36
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/playEvents/7/hitData/coordinates/coordY",
+        "value": 73.37
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/playEvents/7/hitData/trajectory",
+        "value": "fly_ball"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/playEvents/7/hitData/hardness",
+        "value": "medium"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/playEvents/7/hitData/location",
+        "value": "8"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/playEvents/7/endTime",
+        "value": "2026-04-29T19:14:01.593Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/45/playEndTime",
+        "value": "2026-04-29T19:14:01.593Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/result/isOut",
+        "value": true
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/result/event",
+        "value": "Flyout"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/result/eventType",
+        "value": "field_out"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/result/description",
+        "value": "Luke Keaschall flies out to center fielder Julio Rodr\u00edguez."
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/endTime",
+        "value": "2026-04-29T19:14:01.593Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/isComplete",
+        "value": true
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/hasOut",
+        "value": true
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/currentPlay/about/hasReview",
+        "from": "/liveData/plays/allPlays/45/about/isTopInning"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/count/outs",
+        "value": 2
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/currentPlay/runnerIndex/0",
+        "from": "/liveData/plays/allPlays/45/result/rbi"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/runners/0",
+        "value": {
+          "credits": [
+            {
+              "position": {
+                "code": "8",
+                "name": "Outfielder",
+                "type": "Outfielder",
+                "abbreviation": "CF"
+              },
+              "credit": "f_putout",
+              "player": {
+                "link": "/api/v1/people/677594",
+                "id": 677594
+              }
+            }
+          ],
+          "details": {
+            "playIndex": 7,
+            "responsiblePitcher": null,
+            "earned": false,
+            "rbi": false,
+            "teamUnearned": false,
+            "eventType": "field_out",
+            "isScoringEvent": false,
+            "event": "Flyout",
+            "runner": {
+              "link": "/api/v1/people/807712",
+              "fullName": "Luke Keaschall",
+              "id": 807712
+            },
+            "movementReason": null
+          },
+          "movement": {
+            "outNumber": 2,
+            "outBase": "1B",
+            "start": null,
+            "isOut": true,
+            "end": null,
+            "originBase": null
+          }
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/7/details/isOut",
+        "value": true
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/7/hitData/coordinates/coordX",
+        "value": 103.36
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/7/hitData/coordinates/coordY",
+        "value": 73.37
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/7/hitData/trajectory",
+        "value": "fly_ball"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/7/hitData/hardness",
+        "value": "medium"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/7/hitData/location",
+        "value": "8"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/7/endTime",
+        "value": "2026-04-29T19:14:01.593Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEndTime",
+        "value": "2026-04-29T19:14:01.593Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/playsByInning/5/hits/home/1",
+        "value": {
+          "batter": {
+            "link": "/api/v1/people/807712",
+            "fullName": "Luke Keaschall",
+            "id": 807712
+          },
+          "inning": 6,
+          "coordinates": {
+            "x": 103.36,
+            "y": 73.37
+          },
+          "description": "Flyout",
+          "pitcher": {
+            "link": "/api/v1/people/669923",
+            "fullName": "George Kirby",
+            "id": 669923
+          },
+          "team": {
+            "name": "Minnesota Twins",
+            "link": "/api/v1/teams/142",
+            "allStarStatus": "N",
+            "id": 142,
+            "springLeague": {
+              "name": "Grapefruit League",
+              "link": "/api/v1/league/115",
+              "id": 115,
+              "abbreviation": "GL"
+            }
+          },
+          "type": "O"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/outs",
+        "value": 2
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/flyOuts",
+        "value": 3
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/airOuts",
+        "value": 5
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/atBats",
+        "value": 23
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/obp",
+        "value": ".375"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/era",
+        "value": "3.68"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/inningsPitched",
+        "value": "5.2"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/battersFaced",
+        "value": 24
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/outs",
+        "value": 17
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/groundOutsToAirouts",
+        "value": "1.00"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/pitchesPerInning",
+        "value": "15.88"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/runsScoredPer9",
+        "value": "3.18"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/fielding/putOuts",
+        "value": 17
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/fielding/chances",
+        "value": 23
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/summary",
+        "value": "5.2 IP, 2 ER, 5 K, BB"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/flyOuts",
+        "value": 3
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/airOuts",
+        "value": 5
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/atBats",
+        "value": 23
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/inningsPitched",
+        "value": "5.2"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/battersFaced",
+        "value": 24
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/outs",
+        "value": 17
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/stats/pitching/runsScoredPer9",
+        "value": "3.18"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/flyOuts",
+        "value": 27
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/airOuts",
+        "value": 38
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/atBats",
+        "value": 165
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/obp",
+        "value": ".294"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/era",
+        "value": "3.00"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/inningsPitched",
+        "value": "45.0"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/whip",
+        "value": "1.11"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/battersFaced",
+        "value": 177
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/outs",
+        "value": 135
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/groundOutsToAirouts",
+        "value": "1.39"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/pitchesPerInning",
+        "value": "14.11"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/strikeoutsPer9Inn",
+        "value": "6.80"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/walksPer9Inn",
+        "value": "2.00"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/hitsPer9Inn",
+        "value": "8.00"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/runsScoredPer9",
+        "value": "3.00"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID669923/seasonStats/pitching/homeRunsPer9",
+        "value": "0.80"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID677594/stats/fielding/putOuts",
+        "value": 2
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID677594/stats/fielding/chances",
+        "value": 2
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID677594/seasonStats/fielding/putOuts",
+        "value": 79
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID677594/seasonStats/fielding/chances",
+        "value": 80
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID677594/seasonStats/fielding/fielding",
+        "value": ".988"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/teamStats/batting/flyOuts",
+        "value": 3
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/teamStats/batting/airOuts",
+        "value": 5
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/teamStats/batting/atBats",
+        "value": 23
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/teamStats/batting/plateAppearances",
+        "value": 24
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/teamStats/batting/leftOnBase",
+        "value": 13
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/stats/batting/summary",
+        "value": "1-3"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/stats/batting/flyOuts",
+        "value": 1
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/stats/batting/airOuts",
+        "value": 1
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/stats/batting/atBats",
+        "value": 3
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/stats/batting/plateAppearances",
+        "value": 3
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/stats/batting/leftOnBase",
+        "value": 2
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/flyOuts",
+        "value": 26
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/airOuts",
+        "value": 41
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/avg",
+        "value": ".224"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/atBats",
+        "value": 116
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/obp",
+        "value": ".278"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/slg",
+        "value": ".284"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/ops",
+        "value": ".562"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/plateAppearances",
+        "value": 126
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/leftOnBase",
+        "value": 56
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/babip",
+        "value": ".260"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/groundOutsToAirouts",
+        "value": "0.73"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/seasonStats/batting/atBatsPerHomeRun",
+        "value": "116.00"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/info/0/fieldList/6/value",
+        "value": "2-for-7."
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/info/2/value",
+        "value": "Kirby 5-3; Bradley, T 2-6."
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/info/3/value",
+        "value": "Kirby 24; Bradley, T 22."
+      }
+    ]
+  },
+  {
+    "diff": [
+      {
+        "op": "replace",
+        "path": "/metaData/timeStamp",
+        "value": "20260429_191405"
+      },
+      {
+        "op": "replace",
+        "path": "/metaData/gameEvents/0",
+        "value": "mound_visit"
+      },
+      {
+        "op": "remove",
+        "path": "/metaData/logicalEvents/0"
+      },
+      {
+        "op": "remove",
+        "path": "/metaData/logicalEvents/0"
+      },
+      {
+        "op": "remove",
+        "path": "/metaData/logicalEvents/0"
+      },
+      {
+        "op": "replace",
+        "path": "/gameData/moundVisits/away/used",
+        "value": 2
+      },
+      {
+        "op": "replace",
+        "path": "/gameData/moundVisits/away/remaining",
+        "value": 2
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZoneStats"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/allPlays/45/matchup/batterHotColdZones/0"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/45/playEvents/7/pitchData/extension",
+        "value": 6.741264671536239
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/46",
+        "value": {
+          "result": {
+            "homeScore": 2,
+            "awayScore": 1,
+            "rbi": 0,
+            "description": "Mound Visit.",
+            "isOut": false,
+            "eventType": "mound_visit",
+            "type": "atBat",
+            "event": "Mound Visit"
+          },
+          "actionIndex": [],
+          "runnerIndex": [],
+          "pitchIndex": [],
+          "playEndTime": "2026-04-29T19:14:05.300Z",
+          "about": {
+            "hasOut": false,
+            "captivatingIndex": 0,
+            "inning": 6,
+            "isScoringPlay": false,
+            "atBatIndex": 46,
+            "startTime": "2026-04-29T19:14:05.300Z",
+            "isTopInning": false,
+            "endTime": "2026-04-29T19:14:05.300Z",
+            "halfInning": "bottom",
+            "isComplete": false
+          },
+          "count": {
+            "outs": 2,
+            "balls": 0,
+            "strikes": 0
+          },
+          "atBatIndex": 46,
+          "runners": [],
+          "playEvents": [
+            {
+              "isPitch": false,
+              "count": {
+                "outs": 2,
+                "balls": 0,
+                "strikes": 0
+              },
+              "index": 0,
+              "details": {
+                "homeScore": 2,
+                "awayScore": 1,
+                "isScoringPlay": false,
+                "description": "Mound Visit.",
+                "isOut": false,
+                "eventType": "mound_visit",
+                "event": "Mound Visit",
+                "hasReview": false
+              },
+              "startTime": "2026-04-29T19:14:05.300Z",
+              "endTime": "2026-04-29T19:14:05.300Z",
+              "type": "action"
+            }
+          ],
+          "matchup": {
+            "splits": {
+              "batter": "vs_RHP",
+              "menOnBase": "RISP",
+              "pitcher": "vs_LHB"
+            },
+            "batter": {
+              "link": "/api/v1/people/670242",
+              "fullName": "Matt Wallner",
+              "id": 670242
+            },
+            "pitchHand": {
+              "code": "R",
+              "description": "Right"
+            },
+            "batterHotColdZones": [
+              {
+                "temp": "hot",
+                "color": "rgba(214, 41, 52, .55)",
+                "zone": "01",
+                "value": "1.500"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "02",
+                "value": ".000"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "03",
+                "value": ".000"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "04",
+                "value": ".222"
+              },
+              {
+                "temp": "hot",
+                "color": "rgba(214, 41, 52, .55)",
+                "zone": "05",
+                "value": "1.222"
+              },
+              {
+                "temp": "lukewarm",
+                "color": "rgba(255, 255, 255, 0.55)",
+                "zone": "06",
+                "value": ".714"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "07",
+                "value": ".583"
+              },
+              {
+                "temp": "hot",
+                "color": "rgba(214, 41, 52, .55)",
+                "zone": "08",
+                "value": ".867"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "09",
+                "value": ".000"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "11",
+                "value": ".571"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "12",
+                "value": ".571"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "13",
+                "value": ".278"
+              },
+              {
+                "temp": "cold",
+                "color": "rgba(6, 90, 238, .55)",
+                "zone": "14",
+                "value": ".400"
+              }
+            ],
+            "batterHotColdZoneStats": {
+              "stats": [
+                {
+                  "splits": [
+                    {
+                      "stat": {
+                        "name": "exitVelocity",
+                        "zones": [
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "01",
+                            "value": "97.11"
+                          },
+                          {
+                            "temp": "cool",
+                            "color": "rgba(150, 188, 255, .55)",
+                            "zone": "02",
+                            "value": "87.99"
+                          },
+                          {
+                            "temp": "lukewarm",
+                            "color": "rgba(255, 255, 255, 0.55)",
+                            "zone": "03",
+                            "value": "-"
+                          },
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "04",
+                            "value": "97.28"
+                          },
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "05",
+                            "value": "93.86"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "06",
+                            "value": "72.69"
+                          },
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "07",
+                            "value": "95.71"
+                          },
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "08",
+                            "value": "93.98"
+                          },
+                          {
+                            "temp": "lukewarm",
+                            "color": "rgba(255, 255, 255, 0.55)",
+                            "zone": "09",
+                            "value": "89.19"
+                          },
+                          {
+                            "temp": "lukewarm",
+                            "color": "rgba(255, 255, 255, 0.55)",
+                            "zone": "11",
+                            "value": "-"
+                          },
+                          {
+                            "temp": "lukewarm",
+                            "color": "rgba(255, 255, 255, 0.55)",
+                            "zone": "12",
+                            "value": "-"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "13",
+                            "value": "78.93"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "14",
+                            "value": "46.13"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "stat": {
+                        "name": "onBasePlusSlugging",
+                        "zones": [
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "01",
+                            "value": "1.500"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "02",
+                            "value": ".000"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "03",
+                            "value": ".000"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "04",
+                            "value": ".222"
+                          },
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "05",
+                            "value": "1.222"
+                          },
+                          {
+                            "temp": "lukewarm",
+                            "color": "rgba(255, 255, 255, 0.55)",
+                            "zone": "06",
+                            "value": ".714"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "07",
+                            "value": ".583"
+                          },
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "08",
+                            "value": ".867"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "09",
+                            "value": ".000"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "11",
+                            "value": ".571"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "12",
+                            "value": ".571"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "13",
+                            "value": ".278"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "14",
+                            "value": ".400"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "stat": {
+                        "name": "battingAverage",
+                        "zones": [
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "01",
+                            "value": ".500"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "02",
+                            "value": ".000"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "03",
+                            "value": ".000"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "04",
+                            "value": ".111"
+                          },
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "05",
+                            "value": ".444"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "06",
+                            "value": ".143"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "07",
+                            "value": ".167"
+                          },
+                          {
+                            "temp": "hot",
+                            "color": "rgba(214, 41, 52, .55)",
+                            "zone": "08",
+                            "value": ".400"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "09",
+                            "value": ".000"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "11",
+                            "value": ".000"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "12",
+                            "value": ".000"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "13",
+                            "value": ".067"
+                          },
+                          {
+                            "temp": "cold",
+                            "color": "rgba(6, 90, 238, .55)",
+                            "zone": "14",
+                            "value": ".000"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "exemptions": [],
+                  "type": {
+                    "displayName": "hotColdZones"
+                  },
+                  "group": {
+                    "displayName": "hitting"
+                  }
+                }
+              ]
+            },
+            "pitcher": {
+              "link": "/api/v1/people/669923",
+              "fullName": "George Kirby",
+              "id": 669923
+            },
+            "pitcherHotColdZones": [],
+            "batSide": {
+              "code": "L",
+              "description": "Left"
+            },
+            "postOnSecond": {
+              "link": "/api/v1/people/665019",
+              "fullName": "Kody Clemens",
+              "id": 665019
+            }
+          }
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/result/event",
+        "value": "Mound Visit"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/result/eventType",
+        "value": "mound_visit"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/result/description",
+        "value": "Mound Visit."
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/result/isOut",
+        "value": false
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/atBatIndex",
+        "value": 46
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/startTime",
+        "value": "2026-04-29T19:14:05.300Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/endTime",
+        "value": "2026-04-29T19:14:05.300Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/isComplete",
+        "value": false
+      },
+      {
+        "op": "move",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/isScoringPlay",
+        "from": "/liveData/plays/currentPlay/about/hasReview"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/hasOut",
+        "value": false
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/count/balls",
+        "value": 0
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/count/strikes",
+        "value": 0
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batter/id",
+        "value": 670242
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batter/fullName",
+        "value": "Matt Wallner"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batter/link",
+        "value": "/api/v1/people/670242"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batSide/code",
+        "value": "L"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batSide/description",
+        "value": "Left"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/name",
+        "value": "exitVelocity"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/0/value",
+        "value": "97.11"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/1/color",
+        "value": "rgba(150, 188, 255, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/1/temp",
+        "value": "cool"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/1/value",
+        "value": "87.99"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/2/color",
+        "value": "rgba(255, 255, 255, 0.55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/2/temp",
+        "value": "lukewarm"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/2/value",
+        "value": "-"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/3/color",
+        "value": "rgba(214, 41, 52, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/3/temp",
+        "value": "hot"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/3/value",
+        "value": "97.28"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/4/color",
+        "value": "rgba(214, 41, 52, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/4/temp",
+        "value": "hot"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/4/value",
+        "value": "93.86"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/5/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/5/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/5/value",
+        "value": "72.69"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/6/value",
+        "value": "95.71"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/7/value",
+        "value": "93.98"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/8/color",
+        "value": "rgba(255, 255, 255, 0.55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/8/temp",
+        "value": "lukewarm"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/8/value",
+        "value": "89.19"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/9/color",
+        "value": "rgba(255, 255, 255, 0.55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/9/temp",
+        "value": "lukewarm"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/9/value",
+        "value": "-"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/10/color",
+        "value": "rgba(255, 255, 255, 0.55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/10/temp",
+        "value": "lukewarm"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/10/value",
+        "value": "-"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/11/value",
+        "value": "78.93"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/0/stat/zones/12/value",
+        "value": "46.13"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/name",
+        "value": "onBasePlusSlugging"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/0/color",
+        "value": "rgba(214, 41, 52, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/0/temp",
+        "value": "hot"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/0/value",
+        "value": "1.500"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/1/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/1/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/1/value",
+        "value": ".000"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/2/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/2/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/2/value",
+        "value": ".000"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/3/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/3/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/3/value",
+        "value": ".222"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/4/value",
+        "value": "1.222"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/5/color",
+        "value": "rgba(255, 255, 255, 0.55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/5/temp",
+        "value": "lukewarm"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/5/value",
+        "value": ".714"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/6/value",
+        "value": ".583"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/7/value",
+        "value": ".867"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/8/value",
+        "value": ".000"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/9/value",
+        "value": ".571"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/10/value",
+        "value": ".571"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/11/value",
+        "value": ".278"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/1/stat/zones/12/value",
+        "value": ".400"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/name",
+        "value": "battingAverage"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/0/value",
+        "value": ".500"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/3/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/3/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/3/value",
+        "value": ".111"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/4/color",
+        "value": "rgba(214, 41, 52, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/4/temp",
+        "value": "hot"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/4/value",
+        "value": ".444"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/5/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/5/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/5/value",
+        "value": ".143"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/6/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/6/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/6/value",
+        "value": ".167"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/7/color",
+        "value": "rgba(214, 41, 52, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/7/temp",
+        "value": "hot"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/7/value",
+        "value": ".400"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/8/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/8/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/8/value",
+        "value": ".000"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/9/value",
+        "value": ".000"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/10/value",
+        "value": ".000"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/11/value",
+        "value": ".067"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZoneStats/stats/0/splits/2/stat/zones/12/value",
+        "value": ".000"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/0/value",
+        "value": "1.500"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/3/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/3/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/3/value",
+        "value": ".222"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/4/color",
+        "value": "rgba(214, 41, 52, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/4/temp",
+        "value": "hot"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/4/value",
+        "value": "1.222"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/5/color",
+        "value": "rgba(255, 255, 255, 0.55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/5/temp",
+        "value": "lukewarm"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/5/value",
+        "value": ".714"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/6/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/6/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/6/value",
+        "value": ".583"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/7/color",
+        "value": "rgba(214, 41, 52, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/7/temp",
+        "value": "hot"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/7/value",
+        "value": ".867"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/8/color",
+        "value": "rgba(6, 90, 238, .55)"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/8/temp",
+        "value": "cold"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/8/value",
+        "value": ".000"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/9/value",
+        "value": ".571"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/10/value",
+        "value": ".571"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/11/value",
+        "value": ".278"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/batterHotColdZones/12/value",
+        "value": ".400"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/matchup/splits/pitcher",
+        "value": "vs_LHB"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/pitchIndex/0"
+      },
+      {
+        "op": "move",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/awayScore",
+        "from": "/liveData/plays/currentPlay/pitchIndex/0"
+      },
+      {
+        "op": "move",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/homeScore",
+        "from": "/liveData/plays/currentPlay/pitchIndex/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/pitchIndex/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/pitchIndex/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/pitchIndex/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/pitchIndex/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/runnerIndex/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/runners/0"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/call"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/description",
+        "value": "Mound Visit."
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/code"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/ballColor"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/trailColor"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/isInPlay"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/isStrike"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/isBall"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/type"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/event",
+        "value": "Mound Visit"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/0/details/eventType",
+        "value": "mound_visit"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/0/count/strikes",
+        "value": 0
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/0/count/outs",
+        "value": 2
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/pitchData"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/playId"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/0/pitchNumber"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/0/startTime",
+        "value": "2026-04-29T19:14:05.300Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/0/endTime",
+        "value": "2026-04-29T19:14:05.300Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/0/isPitch",
+        "value": false
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/0/type",
+        "value": "action"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/1"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/1"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/1"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/1"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/1"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/1"
+      },
+      {
+        "op": "remove",
+        "path": "/liveData/plays/currentPlay/playEvents/1"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEndTime",
+        "value": "2026-04-29T19:14:05.300Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/atBatIndex",
+        "value": 46
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/playsByInning/5/endIndex",
+        "value": 46
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/playsByInning/5/bottom/3",
+        "value": 46
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/batter/id",
+        "value": 670242
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/batter/fullName",
+        "value": "Matt Wallner"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/batter/link",
+        "value": "/api/v1/people/670242"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/onDeck/id",
+        "value": 686797
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/onDeck/fullName",
+        "value": "Brooks Lee"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/onDeck/link",
+        "value": "/api/v1/people/686797"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/inHole/id",
+        "value": 668904
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/inHole/fullName",
+        "value": "Royce Lewis"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/inHole/link",
+        "value": "/api/v1/people/668904"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/offense/battingOrder",
+        "value": 7
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/balls",
+        "value": 0
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/linescore/strikes",
+        "value": 0
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID670242/gameStatus/isCurrentBatter",
+        "value": true
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/home/players/ID807712/gameStatus/isCurrentBatter",
+        "value": false
+      }
+    ]
+  }
+]

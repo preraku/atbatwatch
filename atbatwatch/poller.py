@@ -31,6 +31,34 @@ async def _get_live_games(api: MlbApiProtocol):
     return live_games
 
 
+async def _poll_iteration(
+    config: Config,
+    api: MlbApiProtocol,
+    redis: aioredis.Redis,
+    timecodes: dict[int, str],
+) -> None:
+    """Run one poll cycle: fetch live games, diff against cached state, emit transitions."""
+    live_games = await _get_live_games(api)
+    if not live_games:
+        print("Poller: no live games.")
+    for game in live_games:
+        try:
+            if game.game_pk not in timecodes:
+                live_data = await api.get_live_feed(game.game_pk)
+                timecodes[game.game_pk] = live_data["metaData"].get("timeStamp", "")
+            else:
+                live_data, timecodes[game.game_pk] = await api.get_live_feed_diff(
+                    game.game_pk, timecodes[game.game_pk]
+                )
+                if live_data is None:
+                    continue
+            n = await process_game(game.game_pk, live_data, redis, game)
+            if n:
+                print(f"Poller: game {game.game_pk} emitted {n} transition(s).")
+        except Exception as e:
+            print(f"Poller error for game {game.game_pk}: {e}")
+
+
 async def run_poller(
     config: Config,
     api: MlbApiProtocol,
@@ -40,30 +68,7 @@ async def run_poller(
     timecodes: dict[int, str] = {}
     while True:
         try:
-            live_games = await _get_live_games(api)
-            if not live_games:
-                print("Poller: no live games.")
-            for game in live_games:
-                try:
-                    if game.game_pk not in timecodes:
-                        live_data = await api.get_live_feed(game.game_pk)
-                        timecodes[game.game_pk] = live_data["metaData"].get(
-                            "timeStamp", ""
-                        )
-                    else:
-                        (
-                            live_data,
-                            timecodes[game.game_pk],
-                        ) = await api.get_live_feed_diff(
-                            game.game_pk, timecodes[game.game_pk]
-                        )
-                        if live_data is None:
-                            continue
-                    n = await process_game(game.game_pk, live_data, redis, game)
-                    if n:
-                        print(f"Poller: game {game.game_pk} emitted {n} transition(s).")
-                except Exception as e:
-                    print(f"Poller error for game {game.game_pk}: {e}")
+            await _poll_iteration(config, api, redis, timecodes)
         except Exception as e:
             print(f"Poller error fetching schedule: {e}")
         await asyncio.sleep(config.poll_interval_seconds)

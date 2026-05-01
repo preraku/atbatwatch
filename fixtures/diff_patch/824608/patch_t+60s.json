@@ -1,0 +1,676 @@
+[
+  {
+    "diff": [
+      {
+        "op": "replace",
+        "path": "/metaData/timeStamp",
+        "value": "20260429_191349"
+      },
+      {
+        "op": "remove",
+        "path": "/metaData/gameEvents/0"
+      },
+      {
+        "op": "remove",
+        "path": "/metaData/logicalEvents/0"
+      },
+      {
+        "op": "remove",
+        "path": "/metaData/logicalEvents/0"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/about/endTime",
+        "value": "2026-04-29T19:13:49.830Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/53/pitchIndex/5",
+        "value": 8
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/53/playEvents/7/pitchData/extension",
+        "value": 6.231298218365748
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/playEvents/7/endTime",
+        "value": "2026-04-29T19:13:49.830Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/53/playEvents/8",
+        "value": {
+          "isPitch": false,
+          "count": {
+            "outs": 1,
+            "balls": 3,
+            "strikes": 2
+          },
+          "index": 8,
+          "details": {
+            "code": "PSO",
+            "disengagementNum": 1,
+            "fromCatcher": false,
+            "description": "Pitcher Step Off",
+            "isOut": false,
+            "hasReview": false
+          },
+          "startTime": "2026-04-29T19:13:49.830Z",
+          "endTime": "2026-04-29T19:13:49.830Z",
+          "type": "stepoff"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/playEndTime",
+        "value": "2026-04-29T19:13:49.830Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/endTime",
+        "value": "2026-04-29T19:13:49.830Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/pitchIndex/5",
+        "value": 8
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/7/pitchData/extension",
+        "value": 6.231298218365748
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/7/endTime",
+        "value": "2026-04-29T19:13:49.830Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/8",
+        "value": {
+          "isPitch": false,
+          "count": {
+            "outs": 1,
+            "balls": 3,
+            "strikes": 2
+          },
+          "index": 8,
+          "details": {
+            "code": "PSO",
+            "disengagementNum": 1,
+            "fromCatcher": false,
+            "description": "Pitcher Step Off",
+            "isOut": false,
+            "hasReview": false
+          },
+          "startTime": "2026-04-29T19:13:49.830Z",
+          "endTime": "2026-04-29T19:13:49.830Z",
+          "type": "stepoff"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEndTime",
+        "value": "2026-04-29T19:13:49.830Z"
+      }
+    ]
+  },
+  {
+    "diff": [
+      {
+        "op": "replace",
+        "path": "/metaData/timeStamp",
+        "value": "20260429_191406"
+      },
+      {
+        "op": "add",
+        "path": "/metaData/gameEvents/0",
+        "value": "foul"
+      },
+      {
+        "op": "add",
+        "path": "/metaData/logicalEvents/0",
+        "value": "countChange"
+      },
+      {
+        "op": "add",
+        "path": "/metaData/logicalEvents/1",
+        "value": "count32"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/about/endTime",
+        "value": "2026-04-29T19:14:07.165Z"
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/allPlays/53/pitchIndex/6",
+        "from": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/flyOuts"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/playEvents/8/endTime",
+        "value": "2026-04-29T19:14:06.516Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/53/playEvents/9",
+        "value": {
+          "playId": "f65e49cc-830c-3552-bea8-7d2b323b90bf",
+          "pitchData": {
+            "strikeZoneWidth": 17,
+            "endSpeed": 83.2,
+            "breaks": {
+              "spinRate": 2684,
+              "breakHorizontal": 0.2,
+              "breakAngle": 16.8,
+              "breakVertical": -36.2,
+              "breakVerticalInduced": -2.8,
+              "spinDirection": 70
+            },
+            "startSpeed": 90.1,
+            "zone": 5,
+            "plateTime": 0.416588240233827,
+            "coordinates": {
+              "pfxX": -0.5360153070264896,
+              "pX": -0.17146527273383447,
+              "pZ": 2.489838494776859,
+              "pfxZ": -1.452135259270845,
+              "vY0": -131.22121133843535,
+              "vZ0": -1.4037049645938446,
+              "vX0": 3.421832643986762,
+              "z0": 5.605659753181819,
+              "y0": 50.00048597054634,
+              "aX": -0.940133188333218,
+              "aY": 26.42239558308972,
+              "x": 123.54,
+              "x0": -1.4197725369973508,
+              "aZ": -34.71295372443515,
+              "y": 171.55
+            },
+            "strikeZoneDepth": 8.5,
+            "strikeZoneTop": 3.068,
+            "strikeZoneBottom": 1.548
+          },
+          "isPitch": true,
+          "pitchNumber": 6,
+          "count": {
+            "outs": 1,
+            "balls": 3,
+            "strikes": 2
+          },
+          "index": 9,
+          "details": {
+            "call": {
+              "code": "F",
+              "description": "Foul"
+            },
+            "ballColor": "rgba(170, 21, 11, 1.0)",
+            "code": "F",
+            "disengagementNum": 1,
+            "description": "Foul",
+            "isBall": false,
+            "isOut": false,
+            "type": {
+              "code": "SL",
+              "description": "Slider"
+            },
+            "trailColor": "rgba(0, 0, 254, 1.0)",
+            "hasReview": false,
+            "isInPlay": false,
+            "isStrike": true
+          },
+          "startTime": "2026-04-29T19:14:06.516Z",
+          "endTime": "2026-04-29T19:14:07.165Z",
+          "type": "pitch"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/playEndTime",
+        "value": "2026-04-29T19:14:07.165Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/endTime",
+        "value": "2026-04-29T19:14:07.165Z"
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/currentPlay/pitchIndex/6",
+        "from": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/flyOuts"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/8/endTime",
+        "value": "2026-04-29T19:14:06.516Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/9",
+        "value": {
+          "playId": "f65e49cc-830c-3552-bea8-7d2b323b90bf",
+          "pitchData": {
+            "strikeZoneWidth": 17,
+            "endSpeed": 83.2,
+            "breaks": {
+              "spinRate": 2684,
+              "breakHorizontal": 0.2,
+              "breakAngle": 16.8,
+              "breakVertical": -36.2,
+              "breakVerticalInduced": -2.8,
+              "spinDirection": 70
+            },
+            "startSpeed": 90.1,
+            "zone": 5,
+            "plateTime": 0.416588240233827,
+            "coordinates": {
+              "pfxX": -0.5360153070264896,
+              "pX": -0.17146527273383447,
+              "pZ": 2.489838494776859,
+              "pfxZ": -1.452135259270845,
+              "vY0": -131.22121133843535,
+              "vZ0": -1.4037049645938446,
+              "vX0": 3.421832643986762,
+              "z0": 5.605659753181819,
+              "y0": 50.00048597054634,
+              "aX": -0.940133188333218,
+              "aY": 26.42239558308972,
+              "x": 123.54,
+              "x0": -1.4197725369973508,
+              "aZ": -34.71295372443515,
+              "y": 171.55
+            },
+            "strikeZoneDepth": 8.5,
+            "strikeZoneTop": 3.068,
+            "strikeZoneBottom": 1.548
+          },
+          "isPitch": true,
+          "pitchNumber": 6,
+          "count": {
+            "outs": 1,
+            "balls": 3,
+            "strikes": 2
+          },
+          "index": 9,
+          "details": {
+            "call": {
+              "code": "F",
+              "description": "Foul"
+            },
+            "ballColor": "rgba(170, 21, 11, 1.0)",
+            "code": "F",
+            "disengagementNum": 1,
+            "description": "Foul",
+            "isBall": false,
+            "isOut": false,
+            "type": {
+              "code": "SL",
+              "description": "Slider"
+            },
+            "trailColor": "rgba(0, 0, 254, 1.0)",
+            "hasReview": false,
+            "isInPlay": false,
+            "isStrike": true
+          },
+          "startTime": "2026-04-29T19:14:06.516Z",
+          "endTime": "2026-04-29T19:14:07.165Z",
+          "type": "pitch"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEndTime",
+        "value": "2026-04-29T19:14:07.165Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/numberOfPitches",
+        "value": 116
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/pitchesThrown",
+        "value": 116
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/strikes",
+        "value": 69
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/pitchesPerInning",
+        "value": "18.32"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/stats/pitching/numberOfPitches",
+        "value": 6
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/stats/pitching/pitchesThrown",
+        "value": 6
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/stats/pitching/strikes",
+        "value": 3
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/stats/pitching/strikePercentage",
+        "value": ".500"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/numberOfPitches",
+        "value": 241
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/pitchesThrown",
+        "value": 241
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/strikes",
+        "value": 136
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/pitchesPerInning",
+        "value": "16.43"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/info/2/value",
+        "value": "Kikuchi 35-19; Farris 62-42; Silseth 13-5; Bachman 6-3; Fedde 103-65."
+      }
+    ]
+  },
+  {
+    "diff": [
+      {
+        "op": "replace",
+        "path": "/metaData/timeStamp",
+        "value": "20260429_191427"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/about/endTime",
+        "value": "2026-04-29T19:14:27.994Z"
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/allPlays/53/pitchIndex/7",
+        "from": "/metaData/wait"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/53/playEvents/9/pitchData/extension",
+        "value": 6.476216661238114
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/playEvents/9/endTime",
+        "value": "2026-04-29T19:14:27.291Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/allPlays/53/playEvents/10",
+        "value": {
+          "playId": "f8332fe7-0654-3501-8cb2-7c8ff2b9bd44",
+          "pitchData": {
+            "strikeZoneWidth": 17,
+            "endSpeed": 83.1,
+            "breaks": {
+              "spinRate": 2736,
+              "breakHorizontal": -1.9,
+              "breakAngle": 25.2,
+              "breakVertical": -35.2,
+              "breakVerticalInduced": -1.6,
+              "spinDirection": 69
+            },
+            "startSpeed": 90,
+            "zone": 9,
+            "plateTime": 0.41717846529488556,
+            "coordinates": {
+              "pfxX": 0.5735188598702516,
+              "pX": 0.36596968718574524,
+              "pZ": 2.0809807910857128,
+              "pfxZ": -0.6909427188536483,
+              "vY0": -131.07578724821238,
+              "vZ0": -2.4857092390853364,
+              "vX0": 4.034982658073372,
+              "z0": 5.523725245087708,
+              "y0": 50.00425141264946,
+              "aX": 1.0019264943154924,
+              "aY": 26.587231412668817,
+              "x": 103.05,
+              "x0": -1.2651830608625525,
+              "aZ": -33.384561473552665,
+              "y": 182.59
+            },
+            "strikeZoneDepth": 8.5,
+            "strikeZoneTop": 3.068,
+            "strikeZoneBottom": 1.548
+          },
+          "isPitch": true,
+          "pitchNumber": 7,
+          "count": {
+            "outs": 1,
+            "balls": 3,
+            "strikes": 2
+          },
+          "index": 10,
+          "details": {
+            "call": {
+              "code": "F",
+              "description": "Foul"
+            },
+            "ballColor": "rgba(170, 21, 11, 1.0)",
+            "code": "F",
+            "disengagementNum": 1,
+            "description": "Foul",
+            "isBall": false,
+            "isOut": false,
+            "type": {
+              "code": "SL",
+              "description": "Slider"
+            },
+            "trailColor": "rgba(0, 0, 254, 1.0)",
+            "hasReview": false,
+            "isInPlay": false,
+            "isStrike": true
+          },
+          "startTime": "2026-04-29T19:14:27.291Z",
+          "endTime": "2026-04-29T19:14:27.994Z",
+          "type": "pitch"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/allPlays/53/playEndTime",
+        "value": "2026-04-29T19:14:27.994Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/about/endTime",
+        "value": "2026-04-29T19:14:27.994Z"
+      },
+      {
+        "op": "copy",
+        "path": "/liveData/plays/currentPlay/pitchIndex/7",
+        "from": "/metaData/wait"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/9/pitchData/extension",
+        "value": 6.476216661238114
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEvents/9/endTime",
+        "value": "2026-04-29T19:14:27.291Z"
+      },
+      {
+        "op": "add",
+        "path": "/liveData/plays/currentPlay/playEvents/10",
+        "value": {
+          "playId": "f8332fe7-0654-3501-8cb2-7c8ff2b9bd44",
+          "pitchData": {
+            "strikeZoneWidth": 17,
+            "endSpeed": 83.1,
+            "breaks": {
+              "spinRate": 2736,
+              "breakHorizontal": -1.9,
+              "breakAngle": 25.2,
+              "breakVertical": -35.2,
+              "breakVerticalInduced": -1.6,
+              "spinDirection": 69
+            },
+            "startSpeed": 90,
+            "zone": 9,
+            "plateTime": 0.41717846529488556,
+            "coordinates": {
+              "pfxX": 0.5735188598702516,
+              "pX": 0.36596968718574524,
+              "pZ": 2.0809807910857128,
+              "pfxZ": -0.6909427188536483,
+              "vY0": -131.07578724821238,
+              "vZ0": -2.4857092390853364,
+              "vX0": 4.034982658073372,
+              "z0": 5.523725245087708,
+              "y0": 50.00425141264946,
+              "aX": 1.0019264943154924,
+              "aY": 26.587231412668817,
+              "x": 103.05,
+              "x0": -1.2651830608625525,
+              "aZ": -33.384561473552665,
+              "y": 182.59
+            },
+            "strikeZoneDepth": 8.5,
+            "strikeZoneTop": 3.068,
+            "strikeZoneBottom": 1.548
+          },
+          "isPitch": true,
+          "pitchNumber": 7,
+          "count": {
+            "outs": 1,
+            "balls": 3,
+            "strikes": 2
+          },
+          "index": 10,
+          "details": {
+            "call": {
+              "code": "F",
+              "description": "Foul"
+            },
+            "ballColor": "rgba(170, 21, 11, 1.0)",
+            "code": "F",
+            "disengagementNum": 1,
+            "description": "Foul",
+            "isBall": false,
+            "isOut": false,
+            "type": {
+              "code": "SL",
+              "description": "Slider"
+            },
+            "trailColor": "rgba(0, 0, 254, 1.0)",
+            "hasReview": false,
+            "isInPlay": false,
+            "isStrike": true
+          },
+          "startTime": "2026-04-29T19:14:27.291Z",
+          "endTime": "2026-04-29T19:14:27.994Z",
+          "type": "pitch"
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/plays/currentPlay/playEndTime",
+        "value": "2026-04-29T19:14:27.994Z"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/numberOfPitches",
+        "value": 117
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/pitchesThrown",
+        "value": 117
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/strikes",
+        "value": 70
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/strikePercentage",
+        "value": ".600"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/teamStats/pitching/pitchesPerInning",
+        "value": "18.47"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/stats/pitching/numberOfPitches",
+        "value": 7
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/stats/pitching/pitchesThrown",
+        "value": 7
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/stats/pitching/strikes",
+        "value": 4
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/stats/pitching/strikePercentage",
+        "value": ".570"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/numberOfPitches",
+        "value": 242
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/pitchesThrown",
+        "value": 242
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/strikes",
+        "value": 137
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/strikePercentage",
+        "value": ".570"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/teams/away/players/ID696147/seasonStats/pitching/pitchesPerInning",
+        "value": "16.50"
+      },
+      {
+        "op": "replace",
+        "path": "/liveData/boxscore/info/2/value",
+        "value": "Kikuchi 35-19; Farris 62-42; Silseth 13-5; Bachman 7-4; Fedde 103-65."
+      }
+    ]
+  }
+]

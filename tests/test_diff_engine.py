@@ -1,4 +1,5 @@
 import copy
+import os
 from typing import cast
 
 import pytest
@@ -106,20 +107,23 @@ async def test_event_fields_populated(live_feed_in_progress, fake_redis):
 
 
 def _feed_with_linescore(inning: int, is_top: bool, outs: int) -> LiveFeedResponse:
-    return cast(LiveFeedResponse, {
-        "gameData": {"status": {"detailedState": "In Progress"}},
-        "liveData": {
-            "linescore": {
-                "currentInning": inning,
-                "isTopInning": is_top,
-                "outs": outs,
-                "offense": {
-                    "batter": {"id": 1, "fullName": "P1", "link": ""},
-                    "onDeck": {"id": 2, "fullName": "P2", "link": ""},
-                },
-            }
+    return cast(
+        LiveFeedResponse,
+        {
+            "gameData": {"status": {"detailedState": "In Progress"}},
+            "liveData": {
+                "linescore": {
+                    "currentInning": inning,
+                    "isTopInning": is_top,
+                    "outs": outs,
+                    "offense": {
+                        "batter": {"id": 1, "fullName": "P1", "link": ""},
+                        "onDeck": {"id": 2, "fullName": "P2", "link": ""},
+                    },
+                }
+            },
         },
-    })
+    )
 
 
 @pytest.mark.parametrize(
@@ -175,3 +179,17 @@ async def test_final_game_emits_nothing(live_feed_final, fake_redis):
     # Then: no events are emitted
     assert n == 0
     assert not await fake_redis.exists(TRANSITIONS_STREAM)
+
+
+async def test_fixed_now_env_var_sets_occurred_at(live_feed_in_progress, fake_redis):
+    # Given: ATBATWATCH_FIXED_NOW is set
+    fixed = "2026-01-01T00:00:00+00:00"
+    os.environ["ATBATWATCH_FIXED_NOW"] = fixed
+    try:
+        await process_game(GAME_PK, live_feed_in_progress, fake_redis, _game_info())
+        events = await fake_redis.xread({TRANSITIONS_STREAM: "0"})
+        _stream, messages = events[0]
+        for _msg_id, fields in messages:
+            assert fields["occurred_at"] == fixed
+    finally:
+        del os.environ["ATBATWATCH_FIXED_NOW"]

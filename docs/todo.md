@@ -1,3 +1,7 @@
+cache db/api responses
+
+player typeahead
+
 Update our players DB once a day (to make sure we have the right teams)
 
 Add better typing to the response objects from api.py. Right now they just say 'dict'
@@ -15,7 +19,14 @@ Some kind of observability:
 - ram usage
 - cpu usage
 - metrics: 
+    - postgres usage:
+        - number of connections
+        - query latency
+        - number of queries by type (e.g. insert into notification_log, select from users
+
     - our app:
+        - How long does the API take to respond to requests? (latency) e.g. https://api.atbatwatch.prerak.net/me/follows
+        - requests to each endpoint
         - number of users
         - number of follows
         - number of notifications sent

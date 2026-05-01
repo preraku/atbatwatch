@@ -2,8 +2,10 @@
 
 ## Commands
 
+Use uv not bare python/python3 when running Python commands.
+
 ```bash
-# Code quality (run on host)
+# Code quality verifications (run on host)
 uv sync --group dev
 uv run ruff check --fix . && uv run ruff format .
 uv run pyrefly check
@@ -36,6 +38,18 @@ Four components communicate via Redis Streams:
 In production all four run as separate Docker Compose services. Locally, `run-all` runs them as concurrent asyncio tasks in one process (dev convenience only).
 
 **Offline testing:** `fixtures/` holds captured snapshots (`live_feed/`, `schedule/`, `people_search/`, `person/`). `state` and `games` CLI commands accept `--fixture <path>`.
+
+## Acceptance test suite
+
+`acceptance/` holds the rewrite-safe contract suite (Phases 1–5, tagged `acceptance-suite-v1`). It tests only external surfaces — HTTP, Redis, Postgres, outbound webhooks — so the same suite runs unchanged against the future Go rewrite. To run it, start the acceptance stack first, then run pytest:
+
+```bash
+docker compose -f docker-compose.acceptance.yml up -d --build --wait
+uv run pytest acceptance/ -v
+docker compose -f docker-compose.acceptance.yml down -v   # wipe state between full re-runs
+```
+
+See `docs/testing_strategy.md` for the wire contracts the suite pins and `docs/testing_strategy_handoff.md` for the full build plan.
 
 ## Docs
 

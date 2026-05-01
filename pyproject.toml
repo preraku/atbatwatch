@@ -43,7 +43,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "acceptance"]
 asyncio_mode = "auto"
 
 [tool.ruff]

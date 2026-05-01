@@ -4,6 +4,7 @@ Emits transition events to the events:transitions Redis Stream whenever the
 player occupying batter or on-deck position changes.
 """
 
+import os
 import uuid
 from datetime import datetime, timezone
 
@@ -19,6 +20,13 @@ from atbatwatch.types import LiveFeedResponse
 
 TRANSITIONS_STREAM = "events:transitions"
 _GAME_STATE_TTL = 86400  # 24 h
+
+
+def _now_iso() -> str:
+    fixed = os.environ.get("ATBATWATCH_FIXED_NOW")
+    if fixed:
+        return fixed
+    return datetime.now(timezone.utc).isoformat()
 
 
 async def process_game(
@@ -72,7 +80,7 @@ async def process_game(
                     "inning": str(inning),
                     "inning_half": inning_half,
                     "outs": str(outs),
-                    "occurred_at": datetime.now(timezone.utc).isoformat(),
+                    "occurred_at": _now_iso(),
                 },
             )
             events_emitted += 1

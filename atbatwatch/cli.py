@@ -8,7 +8,7 @@ from typing import cast
 import click
 import questionary
 
-from atbatwatch.api import MlbApi, load_fixture
+from atbatwatch.api import MlbApi, load_fixture, parse_diff_patch
 from atbatwatch.config import PlayerConfig, load_config
 from atbatwatch.games import extract_offense_state, get_todays_games
 from atbatwatch.notifier import ConsoleNotifier
@@ -64,6 +64,29 @@ async def _capture_schedule() -> None:
     out.parent.mkdir(exist_ok=True)
     out.write_text(json.dumps(data, indent=2))
     click.echo(f"Saved to {out}")
+
+
+# ---------------------------------------------------------------------------
+# diffPatch parser (used by acceptance tests)
+# ---------------------------------------------------------------------------
+
+
+@main.command("parse-diff-patch")
+@click.argument("patch_json_path", type=click.Path(exists=True))
+@click.option("--start-timecode", required=True, help="Timecode sent as startTimecode")
+def parse_diff_patch_cmd(patch_json_path: str, start_timecode: str) -> None:
+    """Parse a diffPatch response body and print JSON result to stdout.
+
+    Output: {"full_response": <body|null>, "new_timecode": <ts>}
+    When the patch contains offense ops, "needs_full_fetch": true is added and
+    full_response is null (caller must fetch the full feed separately).
+    """
+    body = load_fixture(Path(patch_json_path))
+    data, new_ts, needs_full_fetch = parse_diff_patch(body, start_timecode)
+    result: dict = {"full_response": data, "new_timecode": new_ts}
+    if needs_full_fetch:
+        result["needs_full_fetch"] = True
+    click.echo(json.dumps(result))
 
 
 # ---------------------------------------------------------------------------
@@ -253,6 +276,27 @@ async def _run_poller() -> None:
         await redis.aclose()
 
 
+@main.command("poll-once")
+def poll_once_cmd():
+    """Run exactly one poll cycle and exit."""
+    asyncio.run(_poll_once())
+
+
+async def _poll_once() -> None:
+    from atbatwatch import settings
+    from atbatwatch.poller import _poll_iteration
+    from atbatwatch.redis_client import make_redis
+
+    config = load_config()
+    redis = make_redis(settings.REDIS_URL)
+    timecodes: dict[int, str] = {}
+    try:
+        async with MlbApi() as api:
+            await _poll_iteration(config, api, redis, timecodes)
+    finally:
+        await redis.aclose()
+
+
 @main.command("run-fanout")
 def run_fanout_cmd():
     """Run the fan-out worker — reads transitions and writes per-user delivery jobs."""
@@ -275,6 +319,28 @@ async def _run_fanout() -> None:
         await engine.dispose()
 
 
+@main.command("fanout-once")
+def fanout_once_cmd():
+    """Process all pending transition messages once and exit."""
+    asyncio.run(_fanout_once())
+
+
+async def _fanout_once() -> None:
+    from atbatwatch import settings
+    from atbatwatch.db import make_engine, make_session_factory
+    from atbatwatch.fanout_worker import fanout_once
+    from atbatwatch.redis_client import make_redis
+
+    redis = make_redis(settings.REDIS_URL)
+    engine = make_engine(settings.DATABASE_URL)
+    session_factory = make_session_factory(engine)
+    try:
+        await fanout_once(redis, session_factory)
+    finally:
+        await redis.aclose()
+        await engine.dispose()
+
+
 @main.command("run-delivery")
 def run_delivery_cmd():
     """Run the delivery worker — sends Discord notifications with idempotency."""
@@ -292,6 +358,28 @@ async def _run_delivery() -> None:
     session_factory = make_session_factory(engine)
     try:
         await run_delivery(redis, session_factory)
+    finally:
+        await redis.aclose()
+        await engine.dispose()
+
+
+@main.command("delivery-once")
+def delivery_once_cmd():
+    """Process all pending delivery messages once and exit."""
+    asyncio.run(_delivery_once())
+
+
+async def _delivery_once() -> None:
+    from atbatwatch import settings
+    from atbatwatch.db import make_engine, make_session_factory
+    from atbatwatch.delivery_worker import delivery_once
+    from atbatwatch.redis_client import make_redis
+
+    redis = make_redis(settings.REDIS_URL)
+    engine = make_engine(settings.DATABASE_URL)
+    session_factory = make_session_factory(engine)
+    try:
+        await delivery_once(redis, session_factory)
     finally:
         await redis.aclose()
         await engine.dispose()

@@ -1,0 +1,172 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: atbatwatch
+      POSTGRES_PASSWORD: atbatwatch_test
+      POSTGRES_DB: atbatwatch
+    ports:
+      - "127.0.0.1:5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U atbatwatch"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6380:6379"
+    command: redis-server --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build: .
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  mlb-stub:
+    build:
+      context: .
+      dockerfile: acceptance/Dockerfile
+    command:
+      [
+        "uvicorn",
+        "stubs.mlb_stub:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "9001",
+      ]
+    ports:
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - ./fixtures:/fixtures:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python3",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:9001/health')",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  webhook-capture:
+    build:
+      context: .
+      dockerfile: acceptance/Dockerfile
+    command:
+      [
+        "uvicorn",
+        "stubs.webhook_capture:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "9002",
+      ]
+    ports:
+      - "127.0.0.1:9002:9002"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python3",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:9002/health')",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    command: ["atbatwatch", "run-api"]
+    environment:
+      DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
+      REDIS_URL: redis://redis:6379/0
+      MLB_API_BASE_URL: http://mlb-stub:9001
+      JWT_SECRET: acceptance-test-secret-do-not-use-in-prod
+      CORS_ORIGIN: http://localhost:8001
+      PYTHONUNBUFFERED: "1"
+    ports:
+      - "127.0.0.1:8001:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      mlb-stub:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python3",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs')",
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 12
+      start_period: 10s
+
+  # Worker services — not started by `up`; tests drive them via `docker compose run --rm`.
+  poller:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
+      REDIS_URL: redis://redis:6379/0
+      MLB_API_BASE_URL: http://mlb-stub:9001
+      JWT_SECRET: acceptance-test-secret-do-not-use-in-prod
+      ATBATWATCH_FIXED_NOW: ""
+      PYTHONUNBUFFERED: "1"
+    profiles: ["workers"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  fanout:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: acceptance-test-secret-do-not-use-in-prod
+      PYTHONUNBUFFERED: "1"
+    profiles: ["workers"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  delivery:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: acceptance-test-secret-do-not-use-in-prod
+      PYTHONUNBUFFERED: "1"
+    profiles: ["workers"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
