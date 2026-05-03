@@ -34,10 +34,10 @@ jobs:
         run: uv sync --group dev --no-install-project
 
       - name: Lint acceptance tests
-        run: uv run ruff check acceptance/
+        run: uv run --no-project ruff check acceptance/
 
       - name: Format check acceptance tests
-        run: uv run ruff format --check acceptance/
+        run: uv run --no-project ruff format --check acceptance/
 
   shellcheck:
     runs-on: ubuntu-latest
