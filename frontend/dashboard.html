@@ -42,6 +42,8 @@
     .player-info { display: flex; flex-direction: column; gap: 2px; }
     .player-name { font-size: 0.9rem; }
     .player-meta { font-size: 0.78rem; color: var(--meta); }
+    .notify-prefs { display: flex; gap: 12px; margin-top: 4px; }
+    .notify-prefs label { display: flex; align-items: center; gap: 4px; font-size: 0.78rem; color: var(--meta); cursor: pointer; user-select: none; }
     .results { margin-top: 8px; }
     .result-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); }
     .result-item:last-child { border-bottom: none; }
@@ -104,12 +106,19 @@
             <div class="player-info">
               <span class="player-name">${p.full_name}</span>
               ${meta ? `<span class="player-meta">${meta}</span>` : ""}
+              <div class="notify-prefs">
+                <label><input type="checkbox" class="pref-cb" data-id="${p.player_id}" data-pref="at_bat" ${p.notify_at_bat ? "checked" : ""}> At Bat</label>
+                <label><input type="checkbox" class="pref-cb" data-id="${p.player_id}" data-pref="on_deck" ${p.notify_on_deck ? "checked" : ""}> On Deck</label>
+              </div>
             </div>
             <button data-id="${p.player_id}" data-name="${p.full_name}" class="unfollow-btn">Unfollow</button>
           </li>`;
         }).join("");
         list.querySelectorAll(".unfollow-btn").forEach(btn => {
           btn.addEventListener("click", () => unfollow(+btn.dataset.id, btn.dataset.name));
+        });
+        list.querySelectorAll(".pref-cb").forEach(cb => {
+          cb.addEventListener("change", () => updatePref(list, +cb.dataset.id));
         });
       } catch (err) {
         list.innerHTML = `<li class="err">${err.message}</li>`;
@@ -122,6 +131,22 @@
         await request("DELETE", `/me/follows/${playerId}`);
         await loadFollows();
       } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function updatePref(list, playerId) {
+      const atBatCb = list.querySelector(`.pref-cb[data-id="${playerId}"][data-pref="at_bat"]`);
+      const onDeckCb = list.querySelector(`.pref-cb[data-id="${playerId}"][data-pref="on_deck"]`);
+      try {
+        await request("PATCH", `/me/follows/${playerId}`, {
+          notify_at_bat: atBatCb.checked,
+          notify_on_deck: onDeckCb.checked,
+        });
+      } catch (err) {
+        // Revert the checkbox that was just changed
+        if (document.activeElement === atBatCb) atBatCb.checked = !atBatCb.checked;
+        else onDeckCb.checked = !onDeckCb.checked;
         alert(err.message);
       }
     }

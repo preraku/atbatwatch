@@ -112,6 +112,7 @@ func runAPI() error {
 	mux.HandleFunc("GET /me/follows", authMiddleware(handleListFollows))
 	mux.HandleFunc("POST /me/follows", authMiddleware(handleAddFollow))
 	mux.HandleFunc("DELETE /me/follows/{player_id}", authMiddleware(handleDeleteFollow))
+	mux.HandleFunc("PATCH /me/follows/{player_id}", authMiddleware(handleUpdateFollowPrefs))
 
 	// Player search (auth required)
 	mux.HandleFunc("GET /players/search", authMiddleware(handlePlayerSearch))
@@ -142,7 +143,7 @@ func corsMiddleware(next http.Handler) http.Handler {
 			if origin == allowed {
 				w.Header().Set("Access-Control-Allow-Origin", origin)
 				w.Header().Set("Access-Control-Allow-Credentials", "true")
-				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, PATCH, OPTIONS")
 				w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 				break
 			}
@@ -390,10 +391,12 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 // ---------------------------------------------------------------------------
 
 type playerRow struct {
-	PlayerID int64   `json:"player_id"`
-	FullName string  `json:"full_name"`
-	Team     *string `json:"team"`
-	Position *string `json:"position"`
+	PlayerID     int64   `json:"player_id"`
+	FullName     string  `json:"full_name"`
+	Team         *string `json:"team"`
+	Position     *string `json:"position"`
+	NotifyAtBat  bool    `json:"notify_at_bat"`
+	NotifyOnDeck bool    `json:"notify_on_deck"`
 }
 
 func handleListFollows(w http.ResponseWriter, r *http.Request) {
@@ -401,7 +404,7 @@ func handleListFollows(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	rows, err := dbPool.Query(ctx,
-		`SELECT p.player_id, p.full_name, p.team, p.position
+		`SELECT p.player_id, p.full_name, p.team, p.position, f.notify_at_bat, f.notify_on_deck
 		 FROM players p
 		 JOIN follows f ON p.player_id = f.player_id
 		 WHERE f.user_id = $1
@@ -418,7 +421,7 @@ func handleListFollows(w http.ResponseWriter, r *http.Request) {
 	var follows []playerRow
 	for rows.Next() {
 		var p playerRow
-		if err := rows.Scan(&p.PlayerID, &p.FullName, &p.Team, &p.Position); err != nil {
+		if err := rows.Scan(&p.PlayerID, &p.FullName, &p.Team, &p.Position, &p.NotifyAtBat, &p.NotifyOnDeck); err != nil {
 			log.Printf("list follows scan: %v", err)
 			writeError(w, http.StatusInternalServerError, "Database error")
 			return
@@ -509,6 +512,44 @@ func handleDeleteFollow(w http.ResponseWriter, r *http.Request) {
 	)
 	if err != nil {
 		log.Printf("delete follow: %v", err)
+		writeError(w, http.StatusInternalServerError, "Database error")
+		return
+	}
+	if result.RowsAffected() == 0 {
+		writeError(w, http.StatusNotFound, "Follow not found")
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+type updatePrefsRequest struct {
+	NotifyAtBat  bool `json:"notify_at_bat"`
+	NotifyOnDeck bool `json:"notify_on_deck"`
+}
+
+func handleUpdateFollowPrefs(w http.ResponseWriter, r *http.Request) {
+	playerIDStr := r.PathValue("player_id")
+	playerID, err := strconv.ParseInt(playerIDStr, 10, 64)
+	if err != nil {
+		writeError(w, http.StatusNotFound, "Follow not found")
+		return
+	}
+
+	var req updatePrefsRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusUnprocessableEntity, "Invalid JSON")
+		return
+	}
+
+	userID := currentUserID(r)
+	ctx := r.Context()
+
+	result, err := dbPool.Exec(ctx,
+		`UPDATE follows SET notify_at_bat=$3, notify_on_deck=$4 WHERE user_id=$1 AND player_id=$2`,
+		userID, playerID, req.NotifyAtBat, req.NotifyOnDeck,
+	)
+	if err != nil {
+		log.Printf("update follow prefs: %v", err)
 		writeError(w, http.StatusInternalServerError, "Database error")
 		return
 	}
