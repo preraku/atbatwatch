@@ -253,10 +253,10 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 		if prefs.notifyAtBat {
 			shouldSend = true
 		} else if prefs.notifyOnDeck {
-			// Game-start edge case: user wants on_deck only, but if the player is
-			// batting at the very start of a game they'll never get an on_deck event.
-			// Send the at_bat notification if we haven't already sent an on_deck one
-			// for this player in this game.
+			// Edge case: user wants on_deck only, but some at_bat events are never
+			// preceded by an on_deck event — e.g. the leadoff batter at game start,
+			// or a pinch hitter stepping in mid-game. Send the at_bat notification
+			// if we haven't already sent an on_deck one for this player in this game.
 			prior, err := hasPriorOnDeckNotif(ctx, pool, userID, playerID, gameID)
 			if err != nil {
 				log.Printf("game-start check failed for msg %s: %v", msgID, err)
