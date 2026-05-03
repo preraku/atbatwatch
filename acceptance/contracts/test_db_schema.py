@@ -54,7 +54,7 @@ async def test_follows_columns(db):
         "WHERE table_schema = 'public' AND table_name = 'follows'"
     )
     cols = {r["column_name"] for r in rows}
-    assert {"user_id", "player_id"} <= cols
+    assert {"user_id", "player_id", "notify_at_bat", "notify_on_deck"} <= cols
 
 
 async def test_notification_log_columns(db):
@@ -63,7 +63,7 @@ async def test_notification_log_columns(db):
         "WHERE table_schema = 'public' AND table_name = 'notification_log'"
     )
     cols = {r["column_name"] for r in rows}
-    assert {"id", "event_id", "user_id", "player_id", "state", "status"} <= cols
+    assert {"id", "event_id", "user_id", "player_id", "state", "status", "game_id"} <= cols
 
 
 # ---------------------------------------------------------------------------
@@ -84,6 +84,32 @@ async def test_users_email_unique(db):
             "VALUES ($1, 'discord', 'http://x.invalid')",
             email,
         )
+
+
+async def test_follows_notification_prefs_default_to_true(db):
+    """New follows must default notify_at_bat and notify_on_deck to TRUE."""
+    user_id = await db.fetchval(
+        "INSERT INTO users (email, notification_target_type, notification_target_id) "
+        "VALUES ($1, 'discord', 'http://x.invalid') RETURNING user_id",
+        f"prefs-default-{uuid.uuid4()}@example.com",
+    )
+    await db.execute(
+        "INSERT INTO players (player_id, full_name) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+        999995,
+        "Prefs Default Player",
+    )
+    await db.execute(
+        "INSERT INTO follows (user_id, player_id) VALUES ($1, $2)",
+        user_id,
+        999995,
+    )
+    row = await db.fetchrow(
+        "SELECT notify_at_bat, notify_on_deck FROM follows WHERE user_id=$1 AND player_id=$2",
+        user_id,
+        999995,
+    )
+    assert row["notify_at_bat"] is True
+    assert row["notify_on_deck"] is True
 
 
 async def test_follows_primary_key_is_user_and_player(db):

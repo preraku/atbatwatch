@@ -195,6 +195,24 @@ func hasPriorOnDeckNotif(ctx context.Context, pool *pgxpool.Pool, userID, player
 	return exists, err
 }
 
+// shouldNotify returns true if a notification should be sent. hasPriorOnDeck
+// indicates whether the user already received an on_deck notification for this
+// player in the current game; it is only meaningful when state is "at_bat".
+func shouldNotify(prefs notifPrefs, state string, hasPriorOnDeck bool) bool {
+	if state == "on_deck" {
+		return prefs.notifyOnDeck
+	}
+	// at_bat: honour the explicit at_bat preference first.
+	if prefs.notifyAtBat {
+		return true
+	}
+	// Edge case: user wants on_deck only, but some at_bat events are never
+	// preceded by an on_deck event — e.g. the leadoff batter at game start,
+	// or a pinch hitter stepping in mid-game. Notify if no prior on_deck was
+	// logged for this player in this game.
+	return prefs.notifyOnDeck && !hasPriorOnDeck
+}
+
 // logSent inserts a notification_log row; ON CONFLICT DO NOTHING handles races.
 func logSent(ctx context.Context, pool *pgxpool.Pool, eventID string, userID, playerID int64, state, gameID string) error {
 	_, err := pool.Exec(ctx,
@@ -245,28 +263,17 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 		return
 	}
 
-	shouldSend := false
-	if state == "on_deck" {
-		shouldSend = prefs.notifyOnDeck
-	} else {
-		// at_bat
-		if prefs.notifyAtBat {
-			shouldSend = true
-		} else if prefs.notifyOnDeck {
-			// Edge case: user wants on_deck only, but some at_bat events are never
-			// preceded by an on_deck event — e.g. the leadoff batter at game start,
-			// or a pinch hitter stepping in mid-game. Send the at_bat notification
-			// if we haven't already sent an on_deck one for this player in this game.
-			prior, err := hasPriorOnDeckNotif(ctx, pool, userID, playerID, gameID)
-			if err != nil {
-				log.Printf("game-start check failed for msg %s: %v", msgID, err)
-				return
-			}
-			shouldSend = !prior
+	hasPriorOnDeck := false
+	if state == "at_bat" && !prefs.notifyAtBat && prefs.notifyOnDeck {
+		prior, err := hasPriorOnDeckNotif(ctx, pool, userID, playerID, gameID)
+		if err != nil {
+			log.Printf("game-start check failed for msg %s: %v", msgID, err)
+			return
 		}
+		hasPriorOnDeck = prior
 	}
 
-	if !shouldSend {
+	if !shouldNotify(prefs, state, hasPriorOnDeck) {
 		rdb.XAck(ctx, deliveriesStream, deliveryGroup, msgID)
 		return
 	}
