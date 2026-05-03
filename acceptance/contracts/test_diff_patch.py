@@ -14,20 +14,35 @@ import pytest
 _FIXTURES_ROOT = Path(__file__).parent.parent.parent / "fixtures" / "diff_patch"
 
 
+_PROJECT_ROOT = Path(__file__).parent.parent.parent
+_COMPOSE_FILE = _PROJECT_ROOT / "docker-compose.acceptance.yml"
+
+
 def _run_parser(patch_path: Path, start_timecode: str) -> dict:
-    """Run `atbatwatch parse-diff-patch` and return the parsed JSON result."""
+    """Run `atbatwatch parse-diff-patch` via the Go poller container and return parsed JSON."""
+    # Map host fixture path to the /fixtures volume mount inside the container
+    rel = patch_path.relative_to(_PROJECT_ROOT / "fixtures")
+    container_path = f"/fixtures/{rel}"
+
     result = subprocess.run(
         [
-            "uv",
+            "docker",
+            "compose",
+            "-f",
+            str(_COMPOSE_FILE),
             "run",
+            "--rm",
+            "-T",
+            "poller",
             "atbatwatch",
             "parse-diff-patch",
-            str(patch_path),
+            container_path,
             "--start-timecode",
             start_timecode,
         ],
         capture_output=True,
         text=True,
+        cwd=str(_PROJECT_ROOT),
     )
     assert result.returncode == 0, (
         f"parse-diff-patch exited {result.returncode}:\n{result.stderr}"

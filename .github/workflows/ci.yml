@@ -5,7 +5,23 @@ on:
   pull_request:
 
 jobs:
-  check:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Build
+        run: go build ./...
+
+      - name: Vet
+        run: go vet ./...
+
+  lint-acceptance:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -17,21 +33,15 @@ jobs:
       - name: Install dependencies
         run: uv sync --group dev
 
-      - name: Lint
-        run: uv run ruff check .
+      - name: Lint acceptance tests
+        run: uv run ruff check acceptance/
 
-      - name: Format check
-        run: uv run ruff format --check .
-
-      - name: Type check
-        run: uv run pyrefly check
-
-      - name: Tests
-        run: uv run pytest
+      - name: Format check acceptance tests
+        run: uv run ruff format --check acceptance/
 
   shellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Shellcheck
         run: shellcheck deploy/*.sh

@@ -3,11 +3,8 @@ import os
 from logging.config import fileConfig
 
 from alembic import context
-from dotenv import load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
-
-load_dotenv()
 
 config = context.config
 if config.config_file_name is not None:
@@ -19,9 +16,7 @@ database_url = os.getenv(
 )
 config.set_main_option("sqlalchemy.url", database_url)
 
-from atbatwatch.db import Base  # noqa: E402
-
-target_metadata = Base.metadata
+target_metadata = None
 
 
 def run_migrations_offline() -> None:

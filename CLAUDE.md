@@ -2,7 +2,8 @@
 
 ## Commands
 
-Use uv not bare python/python3 when running Python commands.
+- Use `uv` not bare `python`/`python3` when running Python commands.
+- Use `colima` not `docker` when running Docker commands locally
 
 ```bash
 # Code quality verifications (run on host)

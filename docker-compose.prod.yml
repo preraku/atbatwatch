@@ -37,7 +37,9 @@ services:
         max-file: "1"
 
   migrate:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/migrate.Dockerfile
     command: ["alembic", "upgrade", "head"]
     env_file: .env
     depends_on:
@@ -51,11 +53,11 @@ services:
         max-file: "1"
 
   poller:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/poller.Dockerfile
     command: ["atbatwatch", "run-poller"]
     env_file: .env
-    environment:
-      PYTHONUNBUFFERED: "1"
     restart: unless-stopped
     depends_on:
       migrate:
@@ -69,11 +71,11 @@ services:
         max-file: "1"
 
   fanout:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/fanout.Dockerfile
     command: ["atbatwatch", "run-fanout"]
     env_file: .env
-    environment:
-      PYTHONUNBUFFERED: "1"
     restart: unless-stopped
     depends_on:
       migrate:
@@ -89,11 +91,11 @@ services:
         max-file: "1"
 
   delivery:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/delivery.Dockerfile
     command: ["atbatwatch", "run-delivery"]
     env_file: .env
-    environment:
-      PYTHONUNBUFFERED: "1"
     restart: unless-stopped
     depends_on:
       migrate:
@@ -109,11 +111,11 @@ services:
         max-file: "1"
 
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
     command: ["atbatwatch", "run-api"]
     env_file: .env
-    environment:
-      PYTHONUNBUFFERED: "1"
     restart: unless-stopped
     ports:
       - "127.0.0.1:8000:8000"

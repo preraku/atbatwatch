@@ -5,3 +5,7 @@ docs/config
 .venv/
 memray*
 .playwright-cli/
+/api
+/delivery
+/fanout
+/poller

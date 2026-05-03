@@ -25,7 +25,9 @@ services:
       retries: 10
 
   migrate:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/migrate.Dockerfile
     command: ["alembic", "upgrade", "head"]
     environment:
       DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
@@ -91,7 +93,9 @@ services:
       retries: 10
 
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: ${API_DOCKERFILE:-docker/api.Dockerfile}
     command: ["atbatwatch", "run-api"]
     environment:
       DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
@@ -99,7 +103,6 @@ services:
       MLB_API_BASE_URL: http://mlb-stub:9001
       JWT_SECRET: acceptance-test-secret-do-not-use-in-prod
       CORS_ORIGIN: http://localhost:8001
-      PYTHONUNBUFFERED: "1"
     ports:
       - "127.0.0.1:8001:8000"
     depends_on:
@@ -110,13 +113,7 @@ services:
       mlb-stub:
         condition: service_healthy
     healthcheck:
-      test:
-        [
-          "CMD",
-          "python3",
-          "-c",
-          "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs')",
-        ]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8000/docs"]
       interval: 5s
       timeout: 10s
       retries: 12
@@ -124,14 +121,17 @@ services:
 
   # Worker services — not started by `up`; tests drive them via `docker compose run --rm`.
   poller:
-    build: .
+    build:
+      context: .
+      dockerfile: ${POLLER_DOCKERFILE:-docker/poller.Dockerfile}
     environment:
       DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
       REDIS_URL: redis://redis:6379/0
       MLB_API_BASE_URL: http://mlb-stub:9001
       JWT_SECRET: acceptance-test-secret-do-not-use-in-prod
       ATBATWATCH_FIXED_NOW: ""
-      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./fixtures:/fixtures:ro
     profiles: ["workers"]
     depends_on:
       migrate:
@@ -140,12 +140,13 @@ services:
         condition: service_healthy
 
   fanout:
-    build: .
+    build:
+      context: .
+      dockerfile: ${FANOUT_DOCKERFILE:-docker/fanout.Dockerfile}
     environment:
       DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
       REDIS_URL: redis://redis:6379/0
       JWT_SECRET: acceptance-test-secret-do-not-use-in-prod
-      PYTHONUNBUFFERED: "1"
     profiles: ["workers"]
     depends_on:
       migrate:
@@ -156,12 +157,13 @@ services:
         condition: service_healthy
 
   delivery:
-    build: .
+    build:
+      context: .
+      dockerfile: ${DELIVERY_DOCKERFILE:-docker/delivery.Dockerfile}
     environment:
       DATABASE_URL: postgresql+asyncpg://atbatwatch:atbatwatch_test@postgres:5432/atbatwatch
       REDIS_URL: redis://redis:6379/0
       JWT_SECRET: acceptance-test-secret-do-not-use-in-prod
-      PYTHONUNBUFFERED: "1"
     profiles: ["workers"]
     depends_on:
       migrate:
