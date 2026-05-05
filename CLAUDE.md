@@ -7,16 +7,17 @@
 
 ```bash
 # Code quality verifications (run on host)
+go build ./... && go vet ./...
 uv sync --group dev
-uv run ruff check --fix . && uv run ruff format .
-uv run pyrefly check
-uv run pytest
+uv run ruff check acceptance/ && uv run ruff format --check acceptance/
+
+# Acceptance tests (requires Docker stack — see below)
+docker compose -f docker-compose.acceptance.yml up -d --build --wait
+uv run pytest acceptance/ -v
+docker compose -f docker-compose.acceptance.yml down -v
 
 # Spin up the full stack (see docs/local_prod_dry_run.md for full walkthrough, no caddy locally)
 docker compose -f docker-compose.prod.yml up -d --build postgres redis migrate poller fanout delivery api
-
-# One-off CLI (lookup, games, state, user create, follow, unfollow): see docs/local_prod_dry_run.md
-docker compose -f docker-compose.prod.yml run --rm poller atbatwatch <command>
 
 # Logs / status
 docker compose -f docker-compose.prod.yml ps
@@ -34,11 +35,11 @@ Four components communicate via Redis Streams:
 1. **poller** — polls MLB live feeds every N seconds; emits offense-state changes to `events:transitions`
 2. **fanout** — reads `events:transitions`, queries DB for followers, writes per-user jobs to `events:deliveries`
 3. **delivery** — reads `events:deliveries`, POSTs Discord webhook, logs to `notification_log` (idempotent on `event_id`)
-4. **api** — FastAPI on `:8000`; signup/login (argon2 + JWT), player search, and follow management
+4. **api** — HTTP API on `:8000`; signup/login (argon2id + JWT), player search, and follow management
 
-In production all four run as separate Docker Compose services. Locally, `run-all` runs them as concurrent asyncio tasks in one process (dev convenience only).
+In production all four run as separate Docker Compose services.
 
-**Offline testing:** `fixtures/` holds captured snapshots (`live_feed/`, `schedule/`, `people_search/`, `person/`). `state` and `games` CLI commands accept `--fixture <path>`.
+**Offline testing:** `fixtures/` holds captured snapshots (`live_feed/`, `schedule/`, `people_search/`, `person/`). The acceptance suite's mlb-stub serves these during test runs.
 
 ## Acceptance test suite
 
