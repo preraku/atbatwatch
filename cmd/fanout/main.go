@@ -10,7 +10,11 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	goredis "github.com/redis/go-redis/v9"
+
+	"github.com/preraku/atbatwatch/internal/metrics"
 )
 
 const (
@@ -18,6 +22,24 @@ const (
 	deliveriesStream  = "events:deliveries"
 	fanoutGroup       = "fanout-group"
 	fanoutConsumer    = "fanout-1"
+)
+
+var (
+	fanoutJobsWrittenTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "fanout_jobs_written_total",
+		Help: "Total delivery jobs written to events:deliveries.",
+	})
+
+	fanoutErrorsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "fanout_errors_total",
+		Help: "Total fanout errors by type.",
+	}, []string{"type"})
+
+	fanoutProcessingDuration = promauto.NewHistogram(prometheus.HistogramOpts{
+		Name:    "fanout_processing_duration_seconds",
+		Help:    "Time to process a single transition event through fanout.",
+		Buckets: prometheus.DefBuckets,
+	})
 )
 
 func main() {
@@ -34,6 +56,7 @@ func main() {
 	}
 	switch args[0] {
 	case "run-fanout":
+		metrics.StartServer()
 		if err := runFanout(); err != nil {
 			log.Fatalf("run-fanout: %v", err)
 		}
@@ -111,7 +134,7 @@ func reclaimPEL(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client) {
 }
 
 type follower struct {
-	userID    int64
+	userID     int64
 	webhookURL string
 }
 
@@ -140,16 +163,20 @@ func getFollowers(ctx context.Context, pool *pgxpool.Pool, playerID int64) ([]fo
 }
 
 func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, msgID string, fields map[string]interface{}) {
+	start := time.Now()
+
 	playerIDStr, _ := fields["player_id"].(string)
 	playerID, err := strconv.ParseInt(playerIDStr, 10, 64)
 	if err != nil {
 		log.Printf("fanout: invalid player_id %q: %v", playerIDStr, err)
+		fanoutErrorsTotal.WithLabelValues("invalid_player_id").Inc()
 		return
 	}
 
 	followers, err := getFollowers(ctx, pool, playerID)
 	if err != nil {
 		log.Printf("fanout: get followers for player %s: %v", playerIDStr, err)
+		fanoutErrorsTotal.WithLabelValues("db").Inc()
 		return
 	}
 
@@ -167,13 +194,16 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 			Values: delivery,
 		}).Err(); err != nil {
 			log.Printf("fanout: xadd delivery for user %d: %v", f.userID, err)
+			fanoutErrorsTotal.WithLabelValues("redis").Inc()
 			anyFailed = true
 			continue
 		}
+		fanoutJobsWrittenTotal.Inc()
 	}
 
 	if !anyFailed {
 		rdb.XAck(ctx, transitionsStream, fanoutGroup, msgID)
+		fanoutProcessingDuration.Observe(time.Since(start).Seconds())
 	}
 }
 

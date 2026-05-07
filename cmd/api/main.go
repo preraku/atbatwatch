@@ -19,7 +19,11 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"golang.org/x/crypto/argon2"
+
+	"github.com/preraku/atbatwatch/internal/metrics"
 )
 
 const (
@@ -33,10 +37,33 @@ const (
 )
 
 var (
-	jwtSecret    []byte
-	dbPool       *pgxpool.Pool
-	mlbBase      string
-	corsOrigins  []string
+	jwtSecret   []byte
+	dbPool      *pgxpool.Pool
+	mlbBase     string
+	corsOrigins []string
+)
+
+var (
+	httpRequestsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "http_requests_total",
+		Help: "Total HTTP requests by route, method, and status code.",
+	}, []string{"route", "method", "status"})
+
+	httpRequestDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:    "http_request_duration_seconds",
+		Help:    "HTTP request latency by route.",
+		Buckets: prometheus.DefBuckets,
+	}, []string{"route"})
+
+	usersTotal = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "users_total",
+		Help: "Total number of registered users.",
+	})
+
+	followsTotal = promauto.NewGauge(prometheus.GaugeOpts{
+		Name: "follows_total",
+		Help: "Total number of player follows.",
+	})
 )
 
 // ---------------------------------------------------------------------------
@@ -73,6 +100,53 @@ func printHelp() {
 	fmt.Println("  run-api  Run the HTTP API server")
 }
 
+// statusRecorder wraps ResponseWriter to capture the status code for metrics.
+type statusRecorder struct {
+	http.ResponseWriter
+	status int
+}
+
+func (r *statusRecorder) WriteHeader(code int) {
+	r.status = code
+	r.ResponseWriter.WriteHeader(code)
+}
+
+// instrument wraps a handler with request count and latency metrics.
+func instrument(route string, h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
+		start := time.Now()
+		h(rec, r)
+		httpRequestDuration.WithLabelValues(route).Observe(time.Since(start).Seconds())
+		httpRequestsTotal.WithLabelValues(route, r.Method, strconv.Itoa(rec.status)).Inc()
+	}
+}
+
+func startBusinessGaugeTicker(ctx context.Context) {
+	updateGauges := func() {
+		var n int64
+		if err := dbPool.QueryRow(ctx, "SELECT COUNT(*) FROM users").Scan(&n); err == nil {
+			usersTotal.Set(float64(n))
+		}
+		if err := dbPool.QueryRow(ctx, "SELECT COUNT(*) FROM follows").Scan(&n); err == nil {
+			followsTotal.Set(float64(n))
+		}
+	}
+	updateGauges()
+	go func() {
+		ticker := time.NewTicker(60 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				updateGauges()
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+}
+
 func runAPI() error {
 	jwtSecret = []byte(mustEnv("JWT_SECRET"))
 	mlbBase = os.Getenv("MLB_API_BASE_URL")
@@ -95,6 +169,9 @@ func runAPI() error {
 	}
 	defer dbPool.Close()
 
+	metrics.StartServer()
+	startBusinessGaugeTicker(ctx)
+
 	mux := http.NewServeMux()
 
 	// Health check — acceptance conftest polls /docs
@@ -105,16 +182,16 @@ func runAPI() error {
 	})
 
 	// Auth
-	mux.HandleFunc("POST /auth/signup", handleSignup)
-	mux.HandleFunc("POST /auth/login", handleLogin)
+	mux.HandleFunc("POST /auth/signup", instrument("POST /auth/signup", handleSignup))
+	mux.HandleFunc("POST /auth/login", instrument("POST /auth/login", handleLogin))
 
 	// Follows (auth required)
-	mux.HandleFunc("GET /me/follows", authMiddleware(handleListFollows))
-	mux.HandleFunc("POST /me/follows", authMiddleware(handleAddFollow))
-	mux.HandleFunc("DELETE /me/follows/{player_id}", authMiddleware(handleDeleteFollow))
+	mux.HandleFunc("GET /me/follows", instrument("GET /me/follows", authMiddleware(handleListFollows)))
+	mux.HandleFunc("POST /me/follows", instrument("POST /me/follows", authMiddleware(handleAddFollow)))
+	mux.HandleFunc("DELETE /me/follows/{player_id}", instrument("DELETE /me/follows/{player_id}", authMiddleware(handleDeleteFollow)))
 
 	// Player search (auth required)
-	mux.HandleFunc("GET /players/search", authMiddleware(handlePlayerSearch))
+	mux.HandleFunc("GET /players/search", instrument("GET /players/search", authMiddleware(handlePlayerSearch)))
 
 	port := os.Getenv("PORT")
 	if port == "" {

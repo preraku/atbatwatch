@@ -2,6 +2,7 @@ FROM golang:1.26-alpine AS builder
 WORKDIR /build
 COPY go.mod go.sum ./
 RUN go mod download
+COPY internal/ ./internal/
 COPY cmd/api/ ./cmd/api/
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -o atbatwatch ./cmd/api/
 

@@ -13,7 +13,11 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	goredis "github.com/redis/go-redis/v9"
+
+	"github.com/preraku/atbatwatch/internal/metrics"
 )
 
 const (
@@ -23,6 +27,29 @@ const (
 )
 
 var webhookClient = &http.Client{Timeout: 10 * time.Second}
+
+var (
+	notificationsDeliveredTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "notifications_delivered_total",
+		Help: "Total Discord webhook notifications successfully delivered.",
+	})
+
+	discordWebhookRequestsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "discord_webhook_requests_total",
+		Help: "Total Discord webhook attempts by status.",
+	}, []string{"status"})
+
+	discordWebhookDuration = promauto.NewHistogram(prometheus.HistogramOpts{
+		Name:    "discord_webhook_duration_seconds",
+		Help:    "Discord webhook call latency.",
+		Buckets: prometheus.DefBuckets,
+	})
+
+	deliveryErrorsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "delivery_errors_total",
+		Help: "Total delivery errors by type.",
+	}, []string{"type"})
+)
 
 func main() {
 	args := os.Args[1:]
@@ -35,6 +62,7 @@ func main() {
 	}
 	switch args[0] {
 	case "run-delivery":
+		metrics.StartServer()
 		if err := runDelivery(); err != nil {
 			log.Fatalf("run-delivery: %v", err)
 		}
@@ -175,11 +203,15 @@ func logSent(ctx context.Context, pool *pgxpool.Pool, eventID string, userID, pl
 // postWebhook sends the Discord webhook POST. Returns error on non-2xx.
 func postWebhook(webhookURL, content string) error {
 	body, _ := json.Marshal(map[string]string{"content": content})
+	start := time.Now()
 	resp, err := webhookClient.Post(webhookURL, "application/json", bytes.NewReader(body))
+	discordWebhookDuration.Observe(time.Since(start).Seconds())
 	if err != nil {
+		discordWebhookRequestsTotal.WithLabelValues("error").Inc()
 		return err
 	}
 	defer resp.Body.Close()
+	discordWebhookRequestsTotal.WithLabelValues(strconv.Itoa(resp.StatusCode)).Inc()
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return fmt.Errorf("webhook returned %d", resp.StatusCode)
 	}
@@ -207,11 +239,14 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 	content := formatContent(fields)
 	if err := postWebhook(webhookURL, content); err != nil {
 		log.Printf("Discord delivery failed for user %d: %v", userID, err)
+		deliveryErrorsTotal.WithLabelValues("webhook").Inc()
 		return // don't ACK — retain for retry
 	}
+	notificationsDeliveredTotal.Inc()
 
 	if err := logSent(ctx, pool, eventID, userID, playerID, state); err != nil {
 		log.Printf("log_sent failed for msg %s: %v", msgID, err)
+		deliveryErrorsTotal.WithLabelValues("db").Inc()
 		// We already sent the webhook; best-effort log. Still ACK.
 	}
 

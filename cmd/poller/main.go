@@ -13,7 +13,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	goredis "github.com/redis/go-redis/v9"
+
+	"github.com/preraku/atbatwatch/internal/metrics"
 )
 
 const (
@@ -21,18 +25,41 @@ const (
 	gameStateTTL      = 86400 // 24 hours
 )
 
+var (
+	mlbAPIRequestsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "mlb_api_requests_total",
+		Help: "Total MLB API HTTP requests by endpoint and status.",
+	}, []string{"endpoint", "status"})
+
+	mlbAPIDuration = promauto.NewHistogramVec(prometheus.HistogramOpts{
+		Name:    "mlb_api_duration_seconds",
+		Help:    "MLB API request latency by endpoint.",
+		Buckets: prometheus.DefBuckets,
+	}, []string{"endpoint"})
+
+	transitionsEmittedTotal = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "transitions_emitted_total",
+		Help: "Total offense-state transition events written to events:transitions.",
+	})
+
+	pollErrorsTotal = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "poll_errors_total",
+		Help: "Total poller errors by type.",
+	}, []string{"type"})
+)
+
 var nonLiveStates = map[string]bool{
-	"Warmup":           true,
-	"Pre-Game":         true,
-	"Delayed Start":    true,
-	"Scheduled":        true,
-	"Final":            true,
-	"Game Over":        true,
-	"Completed":        true,
-	"Completed Early":  true,
-	"Postponed":        true,
-	"Cancelled":        true,
-	"Suspended":        true,
+	"Warmup":          true,
+	"Pre-Game":        true,
+	"Delayed Start":   true,
+	"Scheduled":       true,
+	"Final":           true,
+	"Game Over":       true,
+	"Completed":       true,
+	"Completed Early": true,
+	"Postponed":       true,
+	"Cancelled":       true,
+	"Suspended":       true,
 }
 
 // ---------------------------------------------------------------------------
@@ -202,6 +229,8 @@ func pollOnce() {
 }
 
 func runPoller() {
+	metrics.StartServer()
+
 	ctx := context.Background()
 	rdb := connectRedis()
 	defer rdb.Close()
@@ -237,6 +266,19 @@ type GameInfo struct {
 }
 
 var mlbHTTPClient = &http.Client{Timeout: 15 * time.Second}
+
+func mlbDo(endpoint string, req *http.Request) (*http.Response, error) {
+	start := time.Now()
+	resp, err := mlbHTTPClient.Do(req)
+	elapsed := time.Since(start).Seconds()
+	mlbAPIDuration.WithLabelValues(endpoint).Observe(elapsed)
+	if err != nil {
+		mlbAPIRequestsTotal.WithLabelValues(endpoint, "error").Inc()
+		return nil, err
+	}
+	mlbAPIRequestsTotal.WithLabelValues(endpoint, strconv.Itoa(resp.StatusCode)).Inc()
+	return resp, nil
+}
 
 func pollIteration(ctx context.Context, baseURL string, rdb *goredis.Client, timecodes map[int]string) error {
 	games, err := getLiveGames(ctx, baseURL)
@@ -284,10 +326,12 @@ func pollIteration(ctx context.Context, baseURL string, rdb *goredis.Client, tim
 		n, err := processGame(ctx, rdb, game.GamePK, liveData, game)
 		if err != nil {
 			log.Printf("Poller error processing game %d: %v", game.GamePK, err)
+			pollErrorsTotal.WithLabelValues("process_game").Inc()
 			continue
 		}
 		if n > 0 {
 			log.Printf("Poller: game %d emitted %d transition(s).", game.GamePK, n)
+			transitionsEmittedTotal.Add(float64(n))
 		}
 	}
 	return nil
@@ -309,7 +353,7 @@ func getSchedule(ctx context.Context, baseURL string, gameDate string) ([]GameIn
 	q.Set("hydrate", "team,linescore")
 	req.URL.RawQuery = q.Encode()
 
-	resp, err := mlbHTTPClient.Do(req)
+	resp, err := mlbDo("schedule", req)
 	if err != nil {
 		return nil, err
 	}
@@ -403,7 +447,7 @@ func getLiveFeed(ctx context.Context, baseURL string, gamePK int) (map[string]an
 	if err != nil {
 		return nil, err
 	}
-	resp, err := mlbHTTPClient.Do(req)
+	resp, err := mlbDo("live_feed", req)
 	if err != nil {
 		return nil, err
 	}
@@ -433,7 +477,7 @@ func getDiffPatch(ctx context.Context, baseURL string, gamePK int, startTimecode
 	q.Set("startTimecode", startTimecode)
 	req.URL.RawQuery = q.Encode()
 
-	resp, err := mlbHTTPClient.Do(req)
+	resp, err := mlbDo("diff_patch", req)
 	if err != nil {
 		return nil, startTimecode, err
 	}
@@ -642,4 +686,3 @@ func mapOf(v any) map[string]any {
 	}
 	return nil
 }
-
