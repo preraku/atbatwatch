@@ -135,6 +135,7 @@ services:
     restart: unless-stopped
     environment:
       DOMAIN: ${DOMAIN}
+      GRAFANA_DOMAIN: ${GRAFANA_DOMAIN}
     ports:
       - "80:80"
       - "443:443"
