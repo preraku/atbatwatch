@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	goredis "github.com/redis/go-redis/v9"
 )
@@ -161,13 +162,64 @@ func alreadySent(ctx context.Context, pool *pgxpool.Pool, eventID string, userID
 	return exists, err
 }
 
+type notifPrefs struct {
+	notifyAtBat  bool
+	notifyOnDeck bool
+}
+
+// getNotifPrefs fetches the user's notification preferences for a followed player.
+// Returns defaults (both true) if the follow row is no longer present.
+func getNotifPrefs(ctx context.Context, pool *pgxpool.Pool, userID, playerID int64) (notifPrefs, error) {
+	var p notifPrefs
+	err := pool.QueryRow(ctx,
+		"SELECT notify_at_bat, notify_on_deck FROM follows WHERE user_id=$1 AND player_id=$2",
+		userID, playerID,
+	).Scan(&p.notifyAtBat, &p.notifyOnDeck)
+	if err == pgx.ErrNoRows {
+		return notifPrefs{true, true}, nil
+	}
+	return p, err
+}
+
+// hasPriorOnDeckNotif returns true if the user already received an on_deck
+// notification for this player in this game — used to detect the game-start edge case.
+func hasPriorOnDeckNotif(ctx context.Context, pool *pgxpool.Pool, userID, playerID int64, gameID string) (bool, error) {
+	var exists bool
+	err := pool.QueryRow(ctx,
+		`SELECT EXISTS(
+			SELECT 1 FROM notification_log
+			WHERE user_id=$1 AND player_id=$2 AND game_id=$3 AND state='on_deck'
+		)`,
+		userID, playerID, gameID,
+	).Scan(&exists)
+	return exists, err
+}
+
+// shouldNotify returns true if a notification should be sent. hasPriorOnDeck
+// indicates whether the user already received an on_deck notification for this
+// player in the current game; it is only meaningful when state is "at_bat".
+func shouldNotify(prefs notifPrefs, state string, hasPriorOnDeck bool) bool {
+	if state == "on_deck" {
+		return prefs.notifyOnDeck
+	}
+	// at_bat: honour the explicit at_bat preference first.
+	if prefs.notifyAtBat {
+		return true
+	}
+	// Edge case: user wants on_deck only, but some at_bat events are never
+	// preceded by an on_deck event — e.g. the leadoff batter at game start,
+	// or a pinch hitter stepping in mid-game. Notify if no prior on_deck was
+	// logged for this player in this game.
+	return prefs.notifyOnDeck && !hasPriorOnDeck
+}
+
 // logSent inserts a notification_log row; ON CONFLICT DO NOTHING handles races.
-func logSent(ctx context.Context, pool *pgxpool.Pool, eventID string, userID, playerID int64, state string) error {
+func logSent(ctx context.Context, pool *pgxpool.Pool, eventID string, userID, playerID int64, state, gameID string) error {
 	_, err := pool.Exec(ctx,
-		`INSERT INTO notification_log (event_id, user_id, player_id, state, status)
-		 VALUES ($1, $2, $3, $4, 'sent')
+		`INSERT INTO notification_log (event_id, user_id, player_id, state, status, game_id)
+		 VALUES ($1, $2, $3, $4, 'sent', $5)
 		 ON CONFLICT ON CONSTRAINT uq_notification_log_event_user DO NOTHING`,
-		eventID, userID, playerID, state,
+		eventID, userID, playerID, state, gameID,
 	)
 	return err
 }
@@ -192,6 +244,7 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 	userID, _ := strconv.ParseInt(str(fields["user_id"]), 10, 64)
 	playerID, _ := strconv.ParseInt(str(fields["player_id"]), 10, 64)
 	state := str(fields["state"])
+	gameID := str(fields["game_id"])
 	webhookURL := str(fields["webhook_url"])
 
 	sent, err := alreadySent(ctx, pool, eventID, userID)
@@ -204,13 +257,34 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 		return
 	}
 
+	prefs, err := getNotifPrefs(ctx, pool, userID, playerID)
+	if err != nil {
+		log.Printf("get notif prefs failed for msg %s: %v", msgID, err)
+		return
+	}
+
+	hasPriorOnDeck := false
+	if state == "at_bat" && !prefs.notifyAtBat && prefs.notifyOnDeck {
+		prior, err := hasPriorOnDeckNotif(ctx, pool, userID, playerID, gameID)
+		if err != nil {
+			log.Printf("game-start check failed for msg %s: %v", msgID, err)
+			return
+		}
+		hasPriorOnDeck = prior
+	}
+
+	if !shouldNotify(prefs, state, hasPriorOnDeck) {
+		rdb.XAck(ctx, deliveriesStream, deliveryGroup, msgID)
+		return
+	}
+
 	content := formatContent(fields)
 	if err := postWebhook(webhookURL, content); err != nil {
 		log.Printf("Discord delivery failed for user %d: %v", userID, err)
 		return // don't ACK — retain for retry
 	}
 
-	if err := logSent(ctx, pool, eventID, userID, playerID, state); err != nil {
+	if err := logSent(ctx, pool, eventID, userID, playerID, state, gameID); err != nil {
 		log.Printf("log_sent failed for msg %s: %v", msgID, err)
 		// We already sent the webhook; best-effort log. Still ACK.
 	}
