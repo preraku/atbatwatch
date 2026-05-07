@@ -42,13 +42,6 @@
     .player-info { display: flex; flex-direction: column; gap: 2px; }
     .player-name { font-size: 0.9rem; }
     .player-meta { font-size: 0.78rem; color: var(--meta); }
-    .follows-h2 { display: flex; align-items: baseline; }
-    .follows-h2 > span:first-child { flex: 1; }
-    .col-header { width: 72px; text-align: center; font-weight: normal; }
-    #follows-list li { display: grid; grid-template-columns: 1fr 72px 72px 88px; align-items: center; }
-    #follows-list .pref-cb { justify-self: center; margin: 0; cursor: pointer; width: auto; }
-    #follows-list .unfollow-btn { width: 88px; margin-left: 0; }
-    .col-btn-spacer { width: 88px; }
     .results { margin-top: 8px; }
     .result-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); }
     .result-item:last-child { border-bottom: none; }
@@ -64,7 +57,7 @@
   <nav><a id="logout">log out</a></nav>
   <h1>atbatwatch</h1>
 
-  <h2 class="follows-h2"><span>Following</span><span class="col-header">At Bat</span><span class="col-header">On Deck</span><span class="col-btn-spacer"></span></h2>
+  <h2>Following</h2>
   <ul id="follows-list"><li class="empty">Loading…</li></ul>
 
   <h2>Add player</h2>
@@ -112,16 +105,11 @@
               <span class="player-name">${p.full_name}</span>
               ${meta ? `<span class="player-meta">${meta}</span>` : ""}
             </div>
-            <input type="checkbox" class="pref-cb" data-id="${p.player_id}" data-pref="at_bat" ${p.notify_at_bat ? "checked" : ""}>
-            <input type="checkbox" class="pref-cb" data-id="${p.player_id}" data-pref="on_deck" ${p.notify_on_deck ? "checked" : ""}>
             <button data-id="${p.player_id}" data-name="${p.full_name}" class="unfollow-btn">Unfollow</button>
           </li>`;
         }).join("");
         list.querySelectorAll(".unfollow-btn").forEach(btn => {
           btn.addEventListener("click", () => unfollow(+btn.dataset.id, btn.dataset.name));
-        });
-        list.querySelectorAll(".pref-cb").forEach(cb => {
-          cb.addEventListener("change", () => updatePref(cb));
         });
       } catch (err) {
         list.innerHTML = `<li class="err">${err.message}</li>`;
@@ -134,22 +122,6 @@
         await request("DELETE", `/me/follows/${playerId}`);
         await loadFollows();
       } catch (err) {
-        alert(err.message);
-      }
-    }
-
-    async function updatePref(cb) {
-      const li = cb.closest("li");
-      const atBatCb = li.querySelector('.pref-cb[data-pref="at_bat"]');
-      const onDeckCb = li.querySelector('.pref-cb[data-pref="on_deck"]');
-      const playerId = +cb.dataset.id;
-      try {
-        await request("PATCH", `/me/follows/${playerId}`, {
-          notify_at_bat: atBatCb.checked,
-          notify_on_deck: onDeckCb.checked,
-        });
-      } catch (err) {
-        cb.checked = !cb.checked;
         alert(err.message);
       }
     }

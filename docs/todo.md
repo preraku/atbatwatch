@@ -82,3 +82,21 @@ All the ones in deploy.yml must be added to github secretts. see docs/howto.md f
 > Use pgcli. 
 
 > How to deal with ambigous players to follow/unfollow/set notificactions. We should have the client pass in only integer/style player IDs. The client will call the MLB API itself to figure out what the players' IDs are. We can keep the by name lookup for now for local testing, though, since the CLI is essentially a client. 
+
+
+-------
+
+Why do we need go.mod to say 1.26 explicitly?
+Use bubbletea for CLI/TUI?
+Explain what the Dockerfile does
+- What are the env vars
+- Why are there two froms
+- why is the entrypoint atbatwatch each time
+
+/docs endpoint could actually return docs/swagger
+/docs healthcheck
+You really have to handroll so much of the argon2 code? Feels unsafe and there has to be a more library oriented solution to this. 
+
+How does the healthceck work? Why does it use Python?
+
+Why are we self implementing uuid?

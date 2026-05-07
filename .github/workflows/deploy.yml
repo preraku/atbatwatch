@@ -23,6 +23,8 @@ jobs:
           DOMAIN: ${{ secrets.DOMAIN }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+          GRAFANA_DOMAIN: ${{ secrets.GRAFANA_DOMAIN }}
+          GRAFANA_ADMIN_PASSWORD: ${{ secrets.GRAFANA_ADMIN_PASSWORD }}
         run: |
           echo "$DEPLOY_KEY" > /tmp/deploy_key
           chmod 600 /tmp/deploy_key
@@ -37,6 +39,8 @@ jobs:
             [[ -n "$DOMAIN" ]] && echo "DOMAIN=${DOMAIN}" || true
             echo "JWT_SECRET=${JWT_SECRET}"
             echo "CORS_ORIGIN=${CORS_ORIGIN}"
+            [[ -n "$GRAFANA_DOMAIN" ]] && echo "GRAFANA_DOMAIN=${GRAFANA_DOMAIN}" || true
+            [[ -n "$GRAFANA_ADMIN_PASSWORD" ]] && echo "GRAFANA_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}" || true
           } > /tmp/app.env
 
           scp -i /tmp/deploy_key \
