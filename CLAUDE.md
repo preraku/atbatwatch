@@ -47,6 +47,9 @@ In production all four run as separate Docker Compose services.
 
 ```bash
 docker compose -f docker-compose.acceptance.yml up -d --build --wait
+# Workers (poller/fanout/delivery) are in the "workers" profile and are NOT built by the above.
+# After changing worker code, rebuild them explicitly before running tests:
+docker compose -f docker-compose.acceptance.yml --profile workers build poller fanout delivery
 uv run pytest acceptance/ -v
 docker compose -f docker-compose.acceptance.yml down -v   # wipe state between full re-runs
 ```

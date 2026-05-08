@@ -28,15 +28,16 @@ _INNING = 6
 _INNING_HALF = "Bot"
 _OUTS = 0
 
-# Expected Discord content strings (byte-identical to notifier.py output)
+# Expected Discord embed title strings
 _EXPECTED_AT_BAT = (
-    f"⚾ **AT BAT**: **{_BATTER_NAME}** "
+    f"⚾ AT BAT: {_BATTER_NAME} "
     f"({_AWAY_TEAM} @ {_HOME_TEAM} — {_INNING_HALF} {_INNING}, {_OUTS} outs)"
 )
 _EXPECTED_ON_DECK = (
-    f"🔄 **ON DECK**: **{_ONDECK_NAME}** "
+    f"🔄 ON DECK: {_ONDECK_NAME} "
     f"({_AWAY_TEAM} @ {_HOME_TEAM} — {_INNING_HALF} {_INNING}, {_OUTS} outs)"
 )
+_EXPECTED_GAME_URL = f"https://www.mlb.com/tv/g{_GAME_PK}"
 
 
 def _configure_stub(mlb_stub):
@@ -92,7 +93,9 @@ async def test_single_follower_receives_notification(
 
     captured = webhook_capture.get_captured(webhook_id=webhook_id)
     assert len(captured) == 1
-    assert captured[0]["body"]["content"] == _EXPECTED_AT_BAT
+    embed = captured[0]["body"]["embeds"][0]
+    assert embed["title"] == _EXPECTED_AT_BAT
+    assert embed["url"] == _EXPECTED_GAME_URL
 
     row = await db.fetchrow(
         "SELECT event_id, status FROM notification_log WHERE user_id = ("
@@ -119,7 +122,7 @@ async def test_two_followers_each_get_notification(
     for wh in (wh_a, wh_b):
         captured = webhook_capture.get_captured(webhook_id=wh)
         assert len(captured) == 1, f"expected 1 POST for {wh}, got {len(captured)}"
-        assert captured[0]["body"]["content"] == _EXPECTED_AT_BAT
+        assert captured[0]["body"]["embeds"][0]["title"] == _EXPECTED_AT_BAT
 
     log_count = await db.fetchval("SELECT COUNT(*) FROM notification_log")
     assert log_count == 2
@@ -138,7 +141,7 @@ async def test_on_deck_notification_uses_correct_label(
 
     captured = webhook_capture.get_captured(webhook_id=wh)
     assert len(captured) == 1
-    assert captured[0]["body"]["content"] == _EXPECTED_ON_DECK
+    assert captured[0]["body"]["embeds"][0]["title"] == _EXPECTED_ON_DECK
 
 
 async def test_no_followers_means_no_delivery(
@@ -158,10 +161,10 @@ async def test_no_followers_means_no_delivery(
     assert log_count == 0
 
 
-async def test_notification_content_string_is_byte_identical(
+async def test_notification_embed_format(
     mlb_stub, redis_client, webhook_capture, db, http, run_worker
 ):
-    """Verify the exact content string format including the em-dash (U+2014)."""
+    """Verify embed title, URL, and em-dash (U+2014) in the notification."""
     wh_batter, _ = await _create_user_follow(http, _BATTER_ID, _BATTER_NAME)
     wh_deck, _ = await _create_user_follow(http, _ONDECK_ID, _ONDECK_NAME)
     _configure_stub(mlb_stub)
@@ -170,18 +173,17 @@ async def test_notification_content_string_is_byte_identical(
     run_worker("fanout", "fanout-once")
     run_worker("delivery", "delivery-once")
 
-    batter_captured = webhook_capture.get_captured(webhook_id=wh_batter)
-    deck_captured = webhook_capture.get_captured(webhook_id=wh_deck)
-    assert len(batter_captured) == 1
-    assert len(deck_captured) == 1
-
-    batter_content = batter_captured[0]["body"]["content"]
-    deck_content = deck_captured[0]["body"]["content"]
+    batter_embed = webhook_capture.get_captured(webhook_id=wh_batter)[0]["body"]["embeds"][0]
+    deck_embed = webhook_capture.get_captured(webhook_id=wh_deck)[0]["body"]["embeds"][0]
 
     # Verify em-dash (U+2014) not hyphen
-    assert "—" in batter_content
-    assert "—" in deck_content
+    assert "—" in batter_embed["title"]
+    assert "—" in deck_embed["title"]
 
-    # Byte-identical expected strings
-    assert batter_content == _EXPECTED_AT_BAT
-    assert deck_content == _EXPECTED_ON_DECK
+    # Exact title strings
+    assert batter_embed["title"] == _EXPECTED_AT_BAT
+    assert deck_embed["title"] == _EXPECTED_ON_DECK
+
+    # Both point to the same game URL
+    assert batter_embed["url"] == _EXPECTED_GAME_URL
+    assert deck_embed["url"] == _EXPECTED_GAME_URL

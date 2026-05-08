@@ -141,8 +141,18 @@ func reclaimPEL(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client) {
 	}
 }
 
-// formatContent builds the byte-identical Discord content string.
-func formatContent(fields map[string]interface{}) string {
+type discordEmbed struct {
+	Title string `json:"title"`
+	URL   string `json:"url,omitempty"`
+	Color int    `json:"color"`
+}
+
+type discordPayload struct {
+	Embeds []discordEmbed `json:"embeds"`
+}
+
+// formatEmbed builds a Discord embed for an at-bat or on-deck notification.
+func formatEmbed(fields map[string]interface{}) discordPayload {
 	playerName := str(fields["player_name"])
 	state := str(fields["state"])
 	awayTeam := str(fields["away_team_name"])
@@ -150,12 +160,16 @@ func formatContent(fields map[string]interface{}) string {
 	inning, _ := strconv.Atoi(str(fields["inning"]))
 	inningHalf := str(fields["inning_half"])
 	outs, _ := strconv.Atoi(str(fields["outs"]))
+	gameID := str(fields["game_id"])
 
 	var label string
+	var color int
 	if state == "at_bat" {
-		label = "⚾ **AT BAT**"
+		label = "⚾ AT BAT"
+		color = 0xE8572A // MLB orange
 	} else {
-		label = "🔄 **ON DECK**"
+		label = "🔄 ON DECK"
+		color = 0x002D72 // MLB blue
 	}
 
 	outWord := "outs"
@@ -165,11 +179,19 @@ func formatContent(fields map[string]interface{}) string {
 
 	var suffix string
 	if inning != 0 {
-		// em-dash U+2014
 		suffix = fmt.Sprintf(" — %s %d, %d %s", inningHalf, inning, outs, outWord)
 	}
 
-	return fmt.Sprintf("%s: **%s** (%s @ %s%s)", label, playerName, awayTeam, homeTeam, suffix)
+	title := fmt.Sprintf("%s: %s (%s @ %s%s)", label, playerName, awayTeam, homeTeam, suffix)
+
+	var mlbURL string
+	if gameID != "" && gameID != "0" {
+		mlbURL = fmt.Sprintf("https://www.mlb.com/tv/g%s", gameID)
+	}
+
+	return discordPayload{
+		Embeds: []discordEmbed{{Title: title, URL: mlbURL, Color: color}},
+	}
 }
 
 func str(v interface{}) string {
@@ -201,8 +223,8 @@ func logSent(ctx context.Context, pool *pgxpool.Pool, eventID string, userID, pl
 }
 
 // postWebhook sends the Discord webhook POST. Returns error on non-2xx.
-func postWebhook(webhookURL, content string) error {
-	body, _ := json.Marshal(map[string]string{"content": content})
+func postWebhook(webhookURL string, payload discordPayload) error {
+	body, _ := json.Marshal(payload)
 	start := time.Now()
 	resp, err := webhookClient.Post(webhookURL, "application/json", bytes.NewReader(body))
 	discordWebhookDuration.Observe(time.Since(start).Seconds())
@@ -236,8 +258,8 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 		return
 	}
 
-	content := formatContent(fields)
-	if err := postWebhook(webhookURL, content); err != nil {
+	payload := formatEmbed(fields)
+	if err := postWebhook(webhookURL, payload); err != nil {
 		log.Printf("Discord delivery failed for user %d: %v", userID, err)
 		deliveryErrorsTotal.WithLabelValues("webhook").Inc()
 		return // don't ACK — retain for retry
