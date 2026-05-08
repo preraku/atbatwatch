@@ -173,8 +173,12 @@ async def test_notification_embed_format(
     run_worker("fanout", "fanout-once")
     run_worker("delivery", "delivery-once")
 
-    batter_embed = webhook_capture.get_captured(webhook_id=wh_batter)[0]["body"]["embeds"][0]
-    deck_embed = webhook_capture.get_captured(webhook_id=wh_deck)[0]["body"]["embeds"][0]
+    batter_embed = webhook_capture.get_captured(webhook_id=wh_batter)[0]["body"][
+        "embeds"
+    ][0]
+    deck_embed = webhook_capture.get_captured(webhook_id=wh_deck)[0]["body"]["embeds"][
+        0
+    ]
 
     # Verify em-dash (U+2014) not hyphen
     assert "—" in batter_embed["title"]
