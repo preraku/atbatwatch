@@ -62,6 +62,19 @@ var nonLiveStates = map[string]bool{
 	"Suspended":       true,
 }
 
+// terminalStatuses are statuses where a game will never become Live.
+// Pre-live statuses (Warmup, Pre-Game, Scheduled, Delayed Start) are excluded
+// so they remain candidates for nextStart.
+var terminalStatuses = map[string]bool{
+	"Final":           true,
+	"Game Over":       true,
+	"Completed":       true,
+	"Completed Early": true,
+	"Postponed":       true,
+	"Cancelled":       true,
+	"Suspended":       true,
+}
+
 // ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
@@ -223,7 +236,7 @@ func pollOnce() {
 	defer rdb.Close()
 
 	timecodes := make(map[int]string)
-	if err := pollIteration(ctx, mlbBaseURL(), rdb, timecodes); err != nil {
+	if _, _, err := pollIteration(ctx, mlbBaseURL(), rdb, timecodes); err != nil {
 		log.Fatalf("poll-once: %v", err)
 	}
 }
@@ -242,13 +255,19 @@ func runPoller() {
 		}
 	}
 
+	normalInterval := time.Duration(interval) * time.Second
 	timecodes := make(map[int]string)
 	log.Printf("Poller started. Polling every %ds.", interval)
 	for {
-		if err := pollIteration(ctx, mlbBaseURL(), rdb, timecodes); err != nil {
+		nextStart, hasLive, err := pollIteration(ctx, mlbBaseURL(), rdb, timecodes)
+		if err != nil {
 			log.Printf("Poller error: %v", err)
 		}
-		time.Sleep(time.Duration(interval) * time.Second)
+		sleepDur := adaptiveSleep(nextStart, hasLive, normalInterval)
+		if sleepDur > normalInterval {
+			log.Printf("Poller: no live games. Sleeping %s.", sleepDur.Round(time.Second))
+		}
+		time.Sleep(sleepDur)
 	}
 }
 
@@ -263,6 +282,7 @@ type GameInfo struct {
 	AwayTeamID   int
 	AwayTeamName string
 	Status       string
+	GameTime     time.Time
 }
 
 var mlbHTTPClient = &http.Client{Timeout: 15 * time.Second}
@@ -280,14 +300,13 @@ func mlbDo(endpoint string, req *http.Request) (*http.Response, error) {
 	return resp, nil
 }
 
-func pollIteration(ctx context.Context, baseURL string, rdb *goredis.Client, timecodes map[int]string) error {
-	games, err := getLiveGames(ctx, baseURL)
+func pollIteration(ctx context.Context, baseURL string, rdb *goredis.Client, timecodes map[int]string) (nextStart *time.Time, hasLive bool, err error) {
+	games, nextStart, err := getLiveGames(ctx, baseURL)
 	if err != nil {
-		return fmt.Errorf("get live games: %w", err)
+		return nil, false, fmt.Errorf("get live games: %w", err)
 	}
 	if len(games) == 0 {
-		fmt.Println("Poller: no live games.")
-		return nil
+		return nextStart, false, nil
 	}
 
 	for _, game := range games {
@@ -334,7 +353,7 @@ func pollIteration(ctx context.Context, baseURL string, rdb *goredis.Client, tim
 			transitionsEmittedTotal.Add(float64(n))
 		}
 	}
-	return nil
+	return nextStart, true, nil
 }
 
 // ---------------------------------------------------------------------------
@@ -390,6 +409,11 @@ func getSchedule(ctx context.Context, baseURL string, gameDate string) ([]GameIn
 			gamePKf, _ := gm["gamePk"].(float64)
 			homeID, _ := homeTeam["id"].(float64)
 			awayID, _ := awayTeam["id"].(float64)
+			gameDateStr, _ := gm["gameDate"].(string)
+			var gt time.Time
+			if gameDateStr != "" {
+				gt, _ = time.Parse(time.RFC3339, gameDateStr)
+			}
 
 			games = append(games, GameInfo{
 				GamePK:       int(gamePKf),
@@ -398,38 +422,39 @@ func getSchedule(ctx context.Context, baseURL string, gameDate string) ([]GameIn
 				AwayTeamID:   int(awayID),
 				AwayTeamName: str(awayTeam["name"]),
 				Status:       abstractState,
+				GameTime:     gt,
 			})
 		}
 	}
 	return games, nil
 }
 
-func getLiveGames(ctx context.Context, baseURL string) ([]GameInfo, error) {
-	et, err := time.LoadLocation("America/New_York")
-	if err != nil {
-		// fallback: use UTC if tzdata unavailable
+func getLiveGames(ctx context.Context, baseURL string) (live []GameInfo, nextStart *time.Time, err error) {
+	et, loadErr := time.LoadLocation("America/New_York")
+	if loadErr != nil {
 		et = time.UTC
 	}
-	nowET := time.Now().In(et)
+	now := time.Now()
+	nowET := now.In(et)
 	gameDate := nowET.Format("01/02/2006")
 
 	games, err := getSchedule(ctx, baseURL, gameDate)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	var live []GameInfo
 	for _, g := range games {
 		if g.Status == "Live" {
 			live = append(live, g)
 		}
 	}
 
+	// Yesterday fallback: late games may still be live just after midnight ET.
 	if len(live) == 0 && nowET.Hour() < 6 {
 		yesterday := nowET.Add(-24 * time.Hour).Format("01/02/2006")
 		yday, err := getSchedule(ctx, baseURL, yesterday)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		for _, g := range yday {
 			if g.Status == "Live" {
@@ -438,7 +463,40 @@ func getLiveGames(ctx context.Context, baseURL string) ([]GameInfo, error) {
 		}
 	}
 
-	return live, nil
+	// Find the soonest future non-terminal game start from today's schedule.
+	nextStart = firstFutureStart(games, now)
+
+	// If today has no future eligible games, check tomorrow.
+	// A failure here is non-fatal: live games already collected above still proceed normally.
+	if nextStart == nil {
+		tomorrow := nowET.Add(24 * time.Hour).Format("01/02/2006")
+		tmw, tmwErr := getSchedule(ctx, baseURL, tomorrow)
+		if tmwErr != nil {
+			log.Printf("getLiveGames: could not fetch tomorrow's schedule (non-fatal): %v", tmwErr)
+		} else {
+			nextStart = firstFutureStart(tmw, now)
+		}
+	}
+
+	return live, nextStart, nil
+}
+
+// firstFutureStart returns the soonest GameTime that is after now and not terminal.
+func firstFutureStart(games []GameInfo, now time.Time) *time.Time {
+	var soonest *time.Time
+	for _, g := range games {
+		if terminalStatuses[g.Status] {
+			continue
+		}
+		if g.GameTime.IsZero() || !g.GameTime.After(now) {
+			continue
+		}
+		if soonest == nil || g.GameTime.Before(*soonest) {
+			t := g.GameTime
+			soonest = &t
+		}
+	}
+	return soonest
 }
 
 func getLiveFeed(ctx context.Context, baseURL string, gamePK int) (map[string]any, error) {
@@ -645,6 +703,39 @@ func extractInningState(liveData map[string]any) (int, string, int) {
 		half = "Top"
 	}
 	return inning, half, outs
+}
+
+// ---------------------------------------------------------------------------
+// Sleep logic
+// ---------------------------------------------------------------------------
+
+const (
+	maxSleep        = 2 * time.Hour
+	prePollLeadTime = 15 * time.Minute
+	imminentWindow  = 30 * time.Minute
+)
+
+// adaptiveSleep returns how long the poller should sleep after an iteration.
+// When games are live or a start is imminent, it returns the normal interval.
+// Otherwise it sleeps until 15 min before the next start (capped at 2h).
+func adaptiveSleep(nextStart *time.Time, hasLive bool, normalInterval time.Duration) time.Duration {
+	if hasLive {
+		return normalInterval
+	}
+	if nextStart == nil {
+		return maxSleep
+	}
+	timeToStart := time.Until(*nextStart) - prePollLeadTime
+	if timeToStart <= imminentWindow {
+		return normalInterval
+	}
+	if timeToStart > maxSleep {
+		return maxSleep
+	}
+	if timeToStart < normalInterval {
+		return normalInterval
+	}
+	return timeToStart
 }
 
 // ---------------------------------------------------------------------------

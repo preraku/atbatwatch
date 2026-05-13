@@ -125,6 +125,7 @@ class MlbStubClient:
         live_feed_path: Optional[str] = None,
         diff_patch_path: Optional[str] = None,
         schedule_path: Optional[str] = None,
+        schedule_json: Optional[str] = None,
     ) -> None:
         payload: dict = {}
         if game_pk is not None:
@@ -135,12 +136,17 @@ class MlbStubClient:
             payload["diff_patch_path"] = diff_patch_path
         if schedule_path is not None:
             payload["schedule_path"] = schedule_path
+        if schedule_json is not None:
+            payload["schedule_json"] = schedule_json
         httpx.post(
             f"{self._base}/admin/configure", json=payload, timeout=5
         ).raise_for_status()
 
     def reset(self) -> None:
         httpx.post(f"{self._base}/admin/reset", timeout=5).raise_for_status()
+
+    def stats(self) -> dict:
+        return httpx.get(f"{self._base}/admin/stats", timeout=5).json()
 
 
 class WebhookCaptureClient:
