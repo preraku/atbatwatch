@@ -211,7 +211,8 @@ async def test_fanout_produces_delivery_per_follower(
 async def test_fanout_delivery_fields_include_user_fields(
     mlb_stub, redis_client, db, http, run_worker
 ):
-    """events:deliveries must contain all transition fields plus user_id and webhook_url."""
+    """events:deliveries must contain all transition fields plus user_id, webhook_url,
+    notify_at_bat, and notify_on_deck."""
     from acceptance.conftest import _WEBHOOK_CAPTURE_INTERNAL
 
     email = f"fanout2-{uuid.uuid4()}@example.com"
@@ -242,7 +243,132 @@ async def test_fanout_delivery_fields_include_user_fields(
     assert deliveries
 
     _, fields = deliveries[0]
-    expected_keys = _REQUIRED_TRANSITION_FIELDS | {"user_id", "webhook_url"}
+    expected_keys = _REQUIRED_TRANSITION_FIELDS | {
+        "user_id",
+        "webhook_url",
+        "notify_at_bat",
+        "notify_on_deck",
+    }
     assert set(fields.keys()) == expected_keys
     assert _INT_STR_RE.match(fields["user_id"])
     assert fields["webhook_url"].startswith("http")
+    assert fields["notify_at_bat"] in ("true", "false")
+    assert fields["notify_on_deck"] in ("true", "false")
+
+
+async def test_fanout_pref_values_match_follow_settings(
+    mlb_stub, redis_client, db, http, run_worker
+):
+    """notify_at_bat / notify_on_deck on the delivery message reflect the follow prefs."""
+    from acceptance.conftest import _WEBHOOK_CAPTURE_INTERNAL
+
+    email = f"fanout-prefs-{uuid.uuid4()}@example.com"
+    webhook_url = f"{_WEBHOOK_CAPTURE_INTERNAL}/hooks/{uuid.uuid4()}"
+
+    resp = await http.post(
+        "/auth/signup",
+        json={"email": email, "password": "pass", "discord_webhook": webhook_url},
+    )
+    token = resp.json()["token"]
+    auth = {"Authorization": f"Bearer {token}"}
+    await http.post(
+        "/me/follows",
+        json={"player_id": 669016, "full_name": "Brandon Marsh"},
+        headers=auth,
+    )
+    await http.patch(
+        "/me/follows/669016",
+        json={"notify_at_bat": True, "notify_on_deck": False},
+        headers=auth,
+    )
+
+    mlb_stub.configure(
+        schedule_path=_SCHEDULE_PATH,
+        game_pk=_GAME_PK,
+        live_feed_path=_LIVE_FEED_PATH,
+    )
+    run_worker("poller", "poll-once")
+    run_worker("fanout", "fanout-once")
+
+    deliveries = await redis_client.xrange("events:deliveries", "-", "+")
+    assert len(deliveries) == 1
+    _, fields = deliveries[0]
+    assert fields["notify_at_bat"] == "true"
+    assert fields["notify_on_deck"] == "false"
+
+
+async def test_fanout_writes_no_delivery_when_both_prefs_false(
+    mlb_stub, redis_client, db, http, run_worker
+):
+    """Fanout must not enqueue a delivery job for a follower with both prefs disabled."""
+    from acceptance.conftest import _WEBHOOK_CAPTURE_INTERNAL
+
+    email = f"fanout-noop-{uuid.uuid4()}@example.com"
+    webhook_url = f"{_WEBHOOK_CAPTURE_INTERNAL}/hooks/{uuid.uuid4()}"
+
+    resp = await http.post(
+        "/auth/signup",
+        json={"email": email, "password": "pass", "discord_webhook": webhook_url},
+    )
+    token = resp.json()["token"]
+    auth = {"Authorization": f"Bearer {token}"}
+    await http.post(
+        "/me/follows",
+        json={"player_id": 669016, "full_name": "Brandon Marsh"},
+        headers=auth,
+    )
+    await http.patch(
+        "/me/follows/669016",
+        json={"notify_at_bat": False, "notify_on_deck": False},
+        headers=auth,
+    )
+
+    mlb_stub.configure(
+        schedule_path=_SCHEDULE_PATH,
+        game_pk=_GAME_PK,
+        live_feed_path=_LIVE_FEED_PATH,
+    )
+    run_worker("poller", "poll-once")
+    run_worker("fanout", "fanout-once")
+
+    deliveries = await redis_client.xrange("events:deliveries", "-", "+")
+    assert len(deliveries) == 0
+
+
+async def test_fanout_writes_no_delivery_for_on_deck_event_when_notify_on_deck_false(
+    mlb_stub, redis_client, db, http, run_worker
+):
+    """Fanout must not enqueue a delivery for an on_deck event when notify_on_deck=False."""
+    from acceptance.conftest import _WEBHOOK_CAPTURE_INTERNAL
+
+    email = f"fanout-ondeck-{uuid.uuid4()}@example.com"
+    webhook_url = f"{_WEBHOOK_CAPTURE_INTERNAL}/hooks/{uuid.uuid4()}"
+
+    resp = await http.post(
+        "/auth/signup",
+        json={"email": email, "password": "pass", "discord_webhook": webhook_url},
+    )
+    token = resp.json()["token"]
+    auth = {"Authorization": f"Bearer {token}"}
+    # Follow the on-deck player
+    await http.post(
+        "/me/follows",
+        json={"player_id": 664761, "full_name": "Alec Bohm"},
+        headers=auth,
+    )
+    await http.patch(
+        "/me/follows/664761",
+        json={"notify_at_bat": True, "notify_on_deck": False},
+        headers=auth,
+    )
+
+    mlb_stub.configure(
+        schedule_path=_SCHEDULE_PATH,
+        game_pk=_GAME_PK,
+        live_feed_path=_LIVE_FEED_PATH,
+    )
+    run_worker("poller", "poll-once")
+    run_worker("fanout", "fanout-once")
+
+    deliveries = await redis_client.xrange("events:deliveries", "-", "+")
+    assert len(deliveries) == 0

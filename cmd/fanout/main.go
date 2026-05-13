@@ -134,17 +134,26 @@ func reclaimPEL(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client) {
 }
 
 type follower struct {
-	userID     int64
-	webhookURL string
+	userID       int64
+	webhookURL   string
+	notifyAtBat  bool
+	notifyOnDeck bool
 }
 
-func getFollowers(ctx context.Context, pool *pgxpool.Pool, playerID int64) ([]follower, error) {
+func getFollowers(ctx context.Context, pool *pgxpool.Pool, playerID int64, state string) ([]follower, error) {
+	// For on_deck events only followers who want on_deck notifications are relevant.
+	// For at_bat events we include followers who want at_bat OR on_deck notifications;
+	// the on_deck-only subset is needed for the game-start edge case handled in delivery.
 	rows, err := pool.Query(ctx,
-		`SELECT u.user_id, u.notification_target_id
+		`SELECT u.user_id, u.notification_target_id, f.notify_at_bat, f.notify_on_deck
 		 FROM users u
 		 JOIN follows f ON u.user_id = f.user_id
-		 WHERE f.player_id = $1`,
-		playerID,
+		 WHERE f.player_id = $1
+		   AND (
+		     ($2 = 'on_deck' AND f.notify_on_deck)
+		     OR ($2 != 'on_deck' AND (f.notify_at_bat OR f.notify_on_deck))
+		   )`,
+		playerID, state,
 	)
 	if err != nil {
 		return nil, err
@@ -154,7 +163,7 @@ func getFollowers(ctx context.Context, pool *pgxpool.Pool, playerID int64) ([]fo
 	var followers []follower
 	for rows.Next() {
 		var f follower
-		if err := rows.Scan(&f.userID, &f.webhookURL); err != nil {
+		if err := rows.Scan(&f.userID, &f.webhookURL, &f.notifyAtBat, &f.notifyOnDeck); err != nil {
 			return nil, err
 		}
 		followers = append(followers, f)
@@ -173,7 +182,8 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 		return
 	}
 
-	followers, err := getFollowers(ctx, pool, playerID)
+	state, _ := fields["state"].(string)
+	followers, err := getFollowers(ctx, pool, playerID, state)
 	if err != nil {
 		log.Printf("fanout: get followers for player %s: %v", playerIDStr, err)
 		fanoutErrorsTotal.WithLabelValues("db").Inc()
@@ -182,12 +192,14 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 
 	anyFailed := false
 	for _, f := range followers {
-		delivery := make(map[string]interface{}, len(fields)+2)
+		delivery := make(map[string]interface{}, len(fields)+4)
 		for k, v := range fields {
 			delivery[k] = v
 		}
 		delivery["user_id"] = fmt.Sprintf("%d", f.userID)
 		delivery["webhook_url"] = f.webhookURL
+		delivery["notify_at_bat"] = fmt.Sprintf("%t", f.notifyAtBat)
+		delivery["notify_on_deck"] = fmt.Sprintf("%t", f.notifyOnDeck)
 
 		if err := rdb.XAdd(ctx, &goredis.XAddArgs{
 			Stream: deliveriesStream,

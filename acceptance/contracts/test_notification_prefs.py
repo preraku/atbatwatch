@@ -147,6 +147,24 @@ async def test_patch_requires_auth(http, db):
 # ---------------------------------------------------------------------------
 
 
+async def test_at_bat_only_pref_delivers_at_bat_notification(
+    mlb_stub, redis_client, webhook_capture, db, http, run_worker
+):
+    """User with at_bat-only pref following the batter receives an AT BAT notification."""
+    wh, _ = await _make_follower(
+        http, _BATTER_ID, _BATTER_NAME, notify_at_bat=True, notify_on_deck=False
+    )
+    _configure_stub(mlb_stub)
+
+    run_worker("poller", "poll-once")
+    run_worker("fanout", "fanout-once")
+    run_worker("delivery", "delivery-once")
+
+    captured = webhook_capture.get_captured(webhook_id=wh)
+    assert len(captured) == 1
+    assert "AT BAT" in captured[0]["body"]["embeds"][0]["title"]
+
+
 async def test_at_bat_only_pref_suppresses_on_deck_notification(
     mlb_stub, redis_client, webhook_capture, db, http, run_worker
 ):

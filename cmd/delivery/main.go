@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -217,20 +216,6 @@ type notifPrefs struct {
 	notifyOnDeck bool
 }
 
-// getNotifPrefs fetches the user's notification preferences for a followed player.
-// Returns defaults (both true) if the follow row is no longer present.
-func getNotifPrefs(ctx context.Context, pool *pgxpool.Pool, userID, playerID int64) (notifPrefs, error) {
-	var p notifPrefs
-	err := pool.QueryRow(ctx,
-		"SELECT notify_at_bat, notify_on_deck FROM follows WHERE user_id=$1 AND player_id=$2",
-		userID, playerID,
-	).Scan(&p.notifyAtBat, &p.notifyOnDeck)
-	if err == pgx.ErrNoRows {
-		return notifPrefs{true, true}, nil
-	}
-	return p, err
-}
-
 // hasPriorOnDeckNotif returns true if the user already received an on_deck
 // notification for this player in this game — used to detect the game-start edge case.
 func hasPriorOnDeckNotif(ctx context.Context, pool *pgxpool.Pool, userID, playerID int64, gameID string) (bool, error) {
@@ -311,11 +296,13 @@ func processOne(ctx context.Context, pool *pgxpool.Pool, rdb *goredis.Client, ms
 		return
 	}
 
-	prefs, err := getNotifPrefs(ctx, pool, userID, playerID)
-	if err != nil {
-		log.Printf("get notif prefs failed for msg %s: %v", msgID, err)
-		return
+	notifyAtBat, errAB := strconv.ParseBool(str(fields["notify_at_bat"]))
+	notifyOnDeck, errOD := strconv.ParseBool(str(fields["notify_on_deck"]))
+	if errAB != nil || errOD != nil {
+		log.Printf("delivery: missing/malformed pref fields in msg %s, defaulting to notify=true", msgID)
+		notifyAtBat, notifyOnDeck = true, true
 	}
+	prefs := notifPrefs{notifyAtBat: notifyAtBat, notifyOnDeck: notifyOnDeck}
 
 	hasPriorOnDeck := false
 	if state == "at_bat" && !prefs.notifyAtBat && prefs.notifyOnDeck {
